@@ -1,5 +1,5 @@
-import '../lib/app.dart';
+import 'dart:html';
 
 void main() {
-  new App();
+  querySelector('#output').text = 'Your Dart app is running.';
 }

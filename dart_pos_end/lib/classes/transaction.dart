@@ -1,4 +1,4 @@
-import 'banana.dart';
+import 'package:dart_pos_end/classes/banana.dart';
 
 class Transaction {
   Map<Banana, int> itemized = {};
@@ -7,11 +7,9 @@ class Transaction {
   Transaction();
 
   Map<dynamic, int> addProduct(dynamic product) {
-    if (itemized[product] != null) {
-      itemized[product] += 1;
-    } else {
-      itemized[product] = 1;
-    }
+    itemized.update(product, (product) {
+      product += 1;
+    }, ifAbsent: () => 1);
     _updateTotal();
     return itemized;
   }

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="scaffolded-by" content="https://github.com/google/stagehand">
+	<title>dart_pos</title>
+	<link rel="stylesheet" href="styles.css">
+	<link rel="icon" href="favicon.ico">
+	<script defer src="main.dart.js"></script>
+</head>
+
+<body>
+<header>
+	<h1>The Banana Stand</h1>
+	<p> Brought to you by Dart POS </p>
+</header>
+<main>
+	<section class="buttons-container">
+		<h2>Choose Product</h2>
+		<button class="product-button">Plain Banana</button>
+		<button class="product-button">Frozen Banana</button>
+		<button class="product-button">Chocolate Banana</button>
+	</section>
+	<section class="transaction-container">
+		<ul class="items"></ul>
+		<div class="total">
+			<p>Total</p>
+			<p class="cost" id="total">0.00</p>
+		</div>
+	</section>
+</main>
+<footer>
+	<button id="finish-transaction-button">Finish Transaction</button>
+	<h3>Today's Sales: $0.00</h3>
+</footer>
+</body>
+</html>

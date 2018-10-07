@@ -1,7 +1,8 @@
 import 'dart:html';
-import 'classes/banana.dart';
-import 'classes/business.dart';
-import 'classes/transaction.dart';
+
+import 'package:dart_pos_end/classes/banana.dart';
+import 'package:dart_pos_end/classes/business.dart';
+import 'package:dart_pos_end/classes/transaction.dart';
 
 class App extends Business {
   Transaction currentTransaction;
@@ -42,12 +43,12 @@ class App extends Business {
       itemsInTransactionList.appendHtml(_makeLi(banana, qty));
     });
     transactionTotalDisplay.text =
-        currentTransaction.transactionTotal.toString();
+        "${costAsCurrency(currentTransaction.transactionTotal)}";
   }
 
   void finishCurrentTransaction() {
     sales += currentTransaction.transactionTotal;
-    todaysSalesTotalDisplay.text = "Today's sales: $sales";
+    todaysSalesTotalDisplay.text = "Today's sales: ${costAsCurrency(sales)}";
     itemsInTransactionList.children.clear();
     transactionTotalDisplay.text = "0.00";
     _beginNewTransaction();
