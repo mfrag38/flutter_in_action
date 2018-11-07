@@ -6,7 +6,7 @@ class Transaction {
 
   Transaction();
 
-  Map<dynamic, int> addProduct(dynamic product) {
+  Map<dynamic, int> addProductToItemized(dynamic product) {
     itemized.update(product, (product) {
       product += 1;
     }, ifAbsent: () => 1);

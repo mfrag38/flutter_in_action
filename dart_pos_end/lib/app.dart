@@ -37,7 +37,7 @@ class App extends Business {
 
   void addItemToCurrentTransaction(Banana banana) {
     _updateProductStock(banana);
-    currentTransaction.addProduct(banana);
+    currentTransaction.addProductToItemized( banana);
     itemsInTransactionList.children.clear();
     currentTransaction.itemized.forEach((banana, qty) {
       itemsInTransactionList.appendHtml(_makeLi(banana, qty));
