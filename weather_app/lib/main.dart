@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/page/page_container.dart';
 import 'package:weather_app/page/startup_page.dart';
 
 void main() => runApp(new MyApp());
@@ -9,7 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: theme,
-      home: StartupPage(),
+      home: PageContainer(),
     );
   }
 }
