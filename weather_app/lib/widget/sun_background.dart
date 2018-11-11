@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/main.dart';
 
-class Sun extends StatelessWidget {
-  Sun();
+class Sun extends AnimatedWidget {
+  Sun({Key key, Animation<Color> animation})
+      : super(key: key, listenable: animation);
 
   @override
   Widget build(BuildContext context) {
+    final Animation<Color> animation = listenable;
     var maxWidth = MediaQuery.of(context).size.width;
     var margin = (maxWidth * .3) / 2;
 
@@ -18,7 +20,7 @@ class Sun extends StatelessWidget {
         ),
         decoration: new BoxDecoration(
           shape: BoxShape.circle,
-          color: AppColor.yellowSun,
+          color: animation.value,
         ),
       ),
     );

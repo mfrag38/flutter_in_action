@@ -8,15 +8,23 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  built_value: "^6.1.6"
+  built_collection: "^4.0.0"
+
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
+  build_runner: "^1.1.1"
+  built_value_generator: "^6.1.6"
 
 flutter:
   uses-material-design: true
   fonts:
-  - family: Rubik
+  - family: Cabin
     fonts:
-    - asset: assets/fonts/Rubik-Light.ttf
-    - asset: assets/fonts/Rubik-Medium.ttf
-    - asset: assets/fonts/Rubik-Regular.ttf
+    - asset: assets/fonts/Cabin-Regular.otf
+    - asset: assets/fonts/Cabin-Bold.otf
+    - asset: assets/fonts/Cabin-Italic.otf
+    - asset: assets/fonts/Cabin-Medium.otf
+    - asset: assets/fonts/Cabin-BoldItalic.otf
+    - asset: assets/fonts/Cabin-MediumItalic.otf
+    - asset: assets/fonts/Cabin-SemiBold.otf
+    - asset: assets/fonts/Cabin-SemiBoldItalic.otf
