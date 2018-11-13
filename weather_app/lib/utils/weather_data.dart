@@ -1,11 +1,13 @@
 import 'dart:math' as math;
-import 'dart:io';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:weather_app/models/models.dart';
 
-DateTime startDateTime = new DateTime(2018, 11, 08, 0, 0);
+DateTime _today = new DateTime.now();
+DateTime startDateTime = new DateTime(_today.year, _today.month, _today.day, 0);
+DateTime dailyDate = _today;
 String city = "Portland";
+
 int generateCloudCoverageNum(WeatherDescription description) {
   switch (description) {
     case WeatherDescription.clear:
@@ -30,10 +32,10 @@ ForecastDay dailyForecastGenerator(int low, int high) {
     int temp = _random.nextInt(high);
     WeatherDescription randomDescription =
         descriptions[_random.nextInt(descriptions.length - 1)];
-    var tempBuilder = new TemperatureBuilder()
+    var tempBuilder = TemperatureBuilder()
       ..current = temp
       ..temperatureUnit = TemperatureUnit.celsius;
-    forecasts.add(new Weather((b) => b
+    forecasts.add(Weather((b) => b
       ..city = city
       ..dateTime = startDateTime
       ..description = randomDescription.toString()
@@ -44,15 +46,23 @@ ForecastDay dailyForecastGenerator(int low, int high) {
     runningMax = math.max(runningMax, temp);
   }
 
-  return new ForecastDay((b) => b
+  var forecastDay = ForecastDay((b) => b
     ..hourlyWeather = forecasts
     ..min = runningMin
-    ..max = runningMax);
+    ..max = runningMax
+    ..date = dailyDate);
+
+  dailyDate.add(Duration(days: 1));
+
+  return forecastDay;
 }
 
-List<ForecastDay> generateTenDayForecast() {
-  var dailyForecast =
-      List.generate(10, (int index) => dailyForecastGenerator(2, 10));
-  new File('data.txt').writeAsString(dailyForecast.toString());
-  return dailyForecast;
+Forecast generateTenDayForecast() {
+  ListBuilder<ForecastDay> tenDayForecast = ListBuilder();
+
+  List.generate(10, (int index) {
+    tenDayForecast.add(dailyForecastGenerator(2, 10));
+  });
+
+  return new Forecast((b) => b..days = tenDayForecast);
 }

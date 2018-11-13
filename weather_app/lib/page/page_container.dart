@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/main.dart';
 import 'package:weather_app/page/forecast_page.dart';
 
 /// TODO: make comment suck less.
@@ -20,9 +21,13 @@ class PageContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     buildMenuItems();
-
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: AppColor.midnightSky,
+        iconTheme: Theme.of(context)
+            .iconTheme
+            .copyWith(color: AppColor.textColorLight),
+      ),
       drawer: Drawer(
         child: ListView(
           children: menuItems,

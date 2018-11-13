@@ -107,6 +107,9 @@ class _$ForecastDaySerializer implements StructuredSerializer<ForecastDay> {
       serializers.serialize(object.hourlyWeather,
           specifiedType:
               const FullType(BuiltList, const [const FullType(Weather)])),
+      'date',
+      serializers.serialize(object.date,
+          specifiedType: const FullType(DateTime)),
       'min',
       serializers.serialize(object.min, specifiedType: const FullType(int)),
       'max',
@@ -131,6 +134,10 @@ class _$ForecastDaySerializer implements StructuredSerializer<ForecastDay> {
           result.hourlyWeather.replace(serializers.deserialize(value,
               specifiedType: const FullType(
                   BuiltList, const [const FullType(Weather)])) as BuiltList);
+          break;
+        case 'date':
+          result.date = serializers.deserialize(value,
+              specifiedType: const FullType(DateTime)) as DateTime;
           break;
         case 'min':
           result.min = serializers.deserialize(value,
@@ -162,19 +169,25 @@ class _$WeatherSerializer implements StructuredSerializer<Weather> {
       'dateTime',
       serializers.serialize(object.dateTime,
           specifiedType: const FullType(DateTime)),
-      'temperature',
-      serializers.serialize(object.temperature,
-          specifiedType: const FullType(Temperature)),
       'description',
       serializers.serialize(object.description,
           specifiedType: const FullType(String)),
       'cloudCoveragePercentage',
       serializers.serialize(object.cloudCoveragePercentage,
           specifiedType: const FullType(int)),
-      'weatherIcon',
-      serializers.serialize(object.weatherIcon,
-          specifiedType: const FullType(String)),
     ];
+    if (object.temperature != null) {
+      result
+        ..add('temperature')
+        ..add(serializers.serialize(object.temperature,
+            specifiedType: const FullType(Temperature)));
+    }
+    if (object.weatherIcon != null) {
+      result
+        ..add('weatherIcon')
+        ..add(serializers.serialize(object.weatherIcon,
+            specifiedType: const FullType(String)));
+    }
 
     return result;
   }
@@ -380,6 +393,8 @@ class _$ForecastDay extends ForecastDay {
   @override
   final BuiltList<Weather> hourlyWeather;
   @override
+  final DateTime date;
+  @override
   final int min;
   @override
   final int max;
@@ -387,9 +402,13 @@ class _$ForecastDay extends ForecastDay {
   factory _$ForecastDay([void updates(ForecastDayBuilder b)]) =>
       (new ForecastDayBuilder()..update(updates)).build();
 
-  _$ForecastDay._({this.hourlyWeather, this.min, this.max}) : super._() {
+  _$ForecastDay._({this.hourlyWeather, this.date, this.min, this.max})
+      : super._() {
     if (hourlyWeather == null) {
       throw new BuiltValueNullFieldError('ForecastDay', 'hourlyWeather');
+    }
+    if (date == null) {
+      throw new BuiltValueNullFieldError('ForecastDay', 'date');
     }
     if (min == null) {
       throw new BuiltValueNullFieldError('ForecastDay', 'min');
@@ -411,20 +430,23 @@ class _$ForecastDay extends ForecastDay {
     if (identical(other, this)) return true;
     return other is ForecastDay &&
         hourlyWeather == other.hourlyWeather &&
+        date == other.date &&
         min == other.min &&
         max == other.max;
   }
 
   @override
   int get hashCode {
-    return $jf(
-        $jc($jc($jc(0, hourlyWeather.hashCode), min.hashCode), max.hashCode));
+    return $jf($jc(
+        $jc($jc($jc(0, hourlyWeather.hashCode), date.hashCode), min.hashCode),
+        max.hashCode));
   }
 
   @override
   String toString() {
     return (newBuiltValueToStringHelper('ForecastDay')
           ..add('hourlyWeather', hourlyWeather)
+          ..add('date', date)
           ..add('min', min)
           ..add('max', max))
         .toString();
@@ -440,6 +462,10 @@ class ForecastDayBuilder implements Builder<ForecastDay, ForecastDayBuilder> {
   set hourlyWeather(ListBuilder<Weather> hourlyWeather) =>
       _$this._hourlyWeather = hourlyWeather;
 
+  DateTime _date;
+  DateTime get date => _$this._date;
+  set date(DateTime date) => _$this._date = date;
+
   int _min;
   int get min => _$this._min;
   set min(int min) => _$this._min = min;
@@ -453,6 +479,7 @@ class ForecastDayBuilder implements Builder<ForecastDay, ForecastDayBuilder> {
   ForecastDayBuilder get _$this {
     if (_$v != null) {
       _hourlyWeather = _$v.hourlyWeather?.toBuilder();
+      _date = _$v.date;
       _min = _$v.min;
       _max = _$v.max;
       _$v = null;
@@ -479,7 +506,10 @@ class ForecastDayBuilder implements Builder<ForecastDay, ForecastDayBuilder> {
     try {
       _$result = _$v ??
           new _$ForecastDay._(
-              hourlyWeather: hourlyWeather.build(), min: min, max: max);
+              hourlyWeather: hourlyWeather.build(),
+              date: date,
+              min: min,
+              max: max);
     } catch (_) {
       String _$failedField;
       try {
@@ -527,17 +557,11 @@ class _$Weather extends Weather {
     if (dateTime == null) {
       throw new BuiltValueNullFieldError('Weather', 'dateTime');
     }
-    if (temperature == null) {
-      throw new BuiltValueNullFieldError('Weather', 'temperature');
-    }
     if (description == null) {
       throw new BuiltValueNullFieldError('Weather', 'description');
     }
     if (cloudCoveragePercentage == null) {
       throw new BuiltValueNullFieldError('Weather', 'cloudCoveragePercentage');
-    }
-    if (weatherIcon == null) {
-      throw new BuiltValueNullFieldError('Weather', 'weatherIcon');
     }
   }
 
@@ -651,7 +675,7 @@ class WeatherBuilder implements Builder<Weather, WeatherBuilder> {
           new _$Weather._(
               city: city,
               dateTime: dateTime,
-              temperature: temperature.build(),
+              temperature: _temperature?.build(),
               description: description,
               cloudCoveragePercentage: cloudCoveragePercentage,
               weatherIcon: weatherIcon);
@@ -659,7 +683,7 @@ class WeatherBuilder implements Builder<Weather, WeatherBuilder> {
       String _$failedField;
       try {
         _$failedField = 'temperature';
-        temperature.build();
+        _temperature?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'Weather', _$failedField, e.toString());

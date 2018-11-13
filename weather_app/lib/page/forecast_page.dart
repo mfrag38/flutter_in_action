@@ -1,23 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/main.dart';
+import 'package:weather_app/blocs/forecast_bloc.dart';
+import 'package:weather_app/utils/forecast_animation_utils.dart';
+import 'package:weather_app/widget/color_transition_text.dart';
+import 'package:weather_app/widget/color_transition_box.dart';
 import 'package:weather_app/widget/forecast_table.dart';
 import 'package:weather_app/widget/sun_background.dart';
 import 'package:weather_app/widget/time_picker_row.dart';
 
-var times = [
-  '3:00',
-  '6:00',
-  '9:00',
-  '12:00',
-  '15:00',
-  '18:00',
-  '21:00',
-  '0:00'
-];
-
 class ForecastPage extends StatefulWidget {
   @override
-  _ForecastPageState createState() => new _ForecastPageState();
+  _ForecastPageState createState() => _ForecastPageState();
 }
 
 class _ForecastPageState extends State<ForecastPage>
@@ -27,37 +19,51 @@ class _ForecastPageState extends State<ForecastPage>
   AnimationController _animationController;
   ColorTween _colorTween;
   ColorTween _backgroundColorTween;
-  Color colorA = AppColor.periwinkleSky;
-  Color colorB = AppColor.yellowSun;
+  ColorTween _textColorTween;
+  Tween<Offset> _positionOffsetTween;
+  ForecastBloc _bloc;
+  ForecastAnimationState currentAnimationState;
+  ForecastAnimationState nextAnimationState;
 
   _ForecastPageState();
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: times.length, vsync: this);
+    _bloc = new ForecastBloc();
+    var startTime = _bloc.selectedHourlyTemperature.dateTime.hour;
+    var startTabIndex = hours.indexOf(startTime);
+    _tabController = TabController(
+        length: hours.length, vsync: this, initialIndex: startTabIndex);
     _tabController.addListener(handleTabChange);
-    _animationController = AnimationController(
-        duration: Duration(milliseconds: 1000), vsync: this);
-    // get weather
-    _buildColorTweens();
+    currentAnimationState =
+        _bloc.getDataForNextAnimationState(_tabController.index);
+    _handleStateChange();
   }
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  void handleTabChange() {
-    _getDataForTweens();
-    _buildColorTweens();
+  void _handleStateChange() {
+    nextAnimationState =
+        _bloc.getDataForNextAnimationState(_tabController.index);
     _buildAnimationController();
+    _buildTweens();
     setState(() {
       activeTabIndex = _tabController.index;
       _initAnimation();
     });
+    // for next time the animation fires
+    currentAnimationState = nextAnimationState;
+  }
+
+  @override
+  void dispose() {
+    _tabController?.dispose();
+    _animationController?.dispose();
+    super.dispose();
+  }
+
+  void handleTabChange() {
+    if (_tabController.indexIsChanging) return;
+    _handleStateChange();
   }
 
   void _initAnimation() {
@@ -70,64 +76,79 @@ class _ForecastPageState extends State<ForecastPage>
         duration: Duration(milliseconds: 1000), vsync: this);
   }
 
-  void _buildColorTweens({ColorTuple sunColors, ColorTuple backgroundColors}) {
-    _colorTween = new ColorTween(begin: colorA, end: colorB);
-    _backgroundColorTween = new ColorTween(begin: colorA, end: colorB);
+  void _buildTweens() {
+    _colorTween = new ColorTween(
+      begin: currentAnimationState.sunColor,
+      end: nextAnimationState.sunColor,
+    );
+    _backgroundColorTween = new ColorTween(
+      begin: currentAnimationState.backgroundColor,
+      end: nextAnimationState.backgroundColor,
+    );
+    _textColorTween = new ColorTween(
+      begin: currentAnimationState.textColor,
+      end: nextAnimationState.textColor,
+    );
+    _positionOffsetTween = new Tween<Offset>(
+      begin: currentAnimationState.offsetPosition,
+      end: nextAnimationState.offsetPosition,
+    );
   }
 
-  void _getDataForTweens() {}
+  List<String> get _humanReadableHours {
+    return hours.map((hour) => '$hour:00').toList();
+  }
 
   @override
   Widget build(BuildContext context) {
     var background = Sun(animation: _colorTween.animate(_animationController));
-
-    var forecastContent = ForecastTableView();
+    var forecastContent = ForecastTableView(
+      controller: _animationController,
+      textColorTween: _textColorTween,
+      forecast: _bloc.forecast,
+    );
 
     var mainContent = Container(
       padding: EdgeInsets.only(bottom: 24.0),
       child: Column(
         children: <Widget>[
-          Text(
-            "Monday. It's Sunny",
-            style: Theme.of(context)
-                .textTheme
-                .subhead
-                .copyWith(fontWeight: FontWeight.bold),
+          ColorTransitionText(
+            text: "jhe",
+            style: Theme.of(context).textTheme.subhead,
+            animation: _textColorTween.animate(_animationController),
           ),
-          Text(
-            activeTabIndex.toString(),
+          ColorTransitionText(
+            text: activeTabIndex.toString(),
             style: Theme.of(context).textTheme.display3,
+            animation: _textColorTween.animate(_animationController),
           ),
         ],
       ),
     );
-    var timePickerRow =
-        TimePickerRow(controller: _tabController, tabItems: times);
 
-    return Container(
-      color: _backgroundColorTween.animate(_animationController).value,
-      child: Stack(
-        children: <Widget>[
-          Positioned(
-            child: background,
-          ),
-          Column(
-            verticalDirection: VerticalDirection.up,
-            children: <Widget>[
-              forecastContent,
-              mainContent,
-              Flexible(child: timePickerRow),
-            ],
-          ),
-        ],
+    var timePickerRow = TimePickerRow(
+        controller: _tabController, tabItems: _humanReadableHours);
+
+    return ColorTransitionBox(
+      animation: _backgroundColorTween.animate(_animationController),
+      child: Container(
+        child: Stack(
+          children: <Widget>[
+            SlideTransition(
+              position: _positionOffsetTween.animate(_animationController),
+              child: background,
+            ),
+            Column(
+              verticalDirection: VerticalDirection.up,
+              children: <Widget>[
+                forecastContent,
+                mainContent,
+                Flexible(child: timePickerRow),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
-}
-
-class ColorTuple {
-  final Color a;
-  final Color b;
-
-  ColorTuple(this.a, this.b);
 }

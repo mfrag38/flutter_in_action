@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/main.dart';
 
 class Sun extends AnimatedWidget {
   Sun({Key key, Animation<Color> animation})

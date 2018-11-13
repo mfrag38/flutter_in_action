@@ -10,10 +10,17 @@ abstract class Forecast implements Built<Forecast, ForecastBuilder> {
 
   factory Forecast([updates(ForecastBuilder b)]) = _$Forecast;
   static Serializer<Forecast> get serializer => _$forecastSerializer;
+
+  static ForecastDay getSelectedDayForecast(
+      Forecast forecast, DateTime selectedDate) {
+    return forecast.days
+        .firstWhere((ForecastDay d) => d.date.day == selectedDate.day);
+  }
 }
 
 abstract class ForecastDay implements Built<ForecastDay, ForecastDayBuilder> {
   BuiltList<Weather> get hourlyWeather;
+  DateTime get date;
   int get min;
   int get max;
 
@@ -21,6 +28,24 @@ abstract class ForecastDay implements Built<ForecastDay, ForecastDayBuilder> {
 
   factory ForecastDay([updates(ForecastDayBuilder b)]) = _$ForecastDay;
   static Serializer<ForecastDay> get serializer => _$forecastDaySerializer;
+
+  static Weather getHourSelection(ForecastDay self, int hour) {
+    if (hour == 0) {
+      // The hours run 1,2,3...22,23,0
+      // 0 == midnight
+      return self.hourlyWeather.last;
+    }
+    return self.hourlyWeather
+        .firstWhere((Weather w) => w.dateTime.hour >= hour);
+  }
+
+  List<int> getHourOptions() {
+    var times = <int>[];
+    this.hourlyWeather.forEach(
+          (Weather w) => times.add(w.dateTime.hour + 1),
+        );
+    return times;
+  }
 }
 
 abstract class Weather implements Built<Weather, WeatherBuilder> {
@@ -30,6 +55,7 @@ abstract class Weather implements Built<Weather, WeatherBuilder> {
   Temperature get temperature;
   String get description;
   int get cloudCoveragePercentage;
+  @nullable
   String get weatherIcon;
 
   Weather._();
