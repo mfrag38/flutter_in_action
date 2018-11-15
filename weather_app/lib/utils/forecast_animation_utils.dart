@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/main.dart';
+import 'package:weather_app/models/models.dart';
+import 'package:weather_app/styles.dart';
 
+// The weather data is shown in 3 hour intervals from 3:00am to Midnight
 List<int> hours = [3, 6, 9, 12, 15, 18, 21, 24];
 
 class ForecastAnimationState {
@@ -76,16 +78,11 @@ class ForecastAnimationState {
   }
 }
 
-class ForecastThemeAnimationTween {
-  final ForecastAnimationState begin;
-  final ForecastAnimationState end;
+Map<WeatherDescription, IconData> weatherIcons = {
+  WeatherDescription.sunny: Icons.wb_sunny,
+  WeatherDescription.cloudy: Icons.wb_cloudy,
+  WeatherDescription.clear: Icons.brightness_2,
+  WeatherDescription.rain: Icons.beach_access,
+  WeatherDescription.snow: Icons.ac_unit,
 
-  ForecastThemeAnimationTween({this.begin, this.end});
-}
-
-class ColorTuple {
-  final Color a;
-  final Color b;
-
-  const ColorTuple(this.a, this.b);
-}
+};

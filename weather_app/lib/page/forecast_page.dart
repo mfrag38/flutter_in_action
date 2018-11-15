@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/blocs/forecast_bloc.dart';
+import 'package:weather_app/utils/date_utils.dart';
 import 'package:weather_app/utils/forecast_animation_utils.dart';
 import 'package:weather_app/widget/color_transition_text.dart';
 import 'package:weather_app/widget/color_transition_box.dart';
@@ -99,6 +100,18 @@ class _ForecastPageState extends State<ForecastPage>
     return hours.map((hour) => '$hour:00').toList();
   }
 
+  String get _weatherDescription {
+    var day =
+        DateUtils.weekdays[_bloc.selectedHourlyTemperature.dateTime.weekday];
+    var description =
+        _bloc.selectedHourlyTemperature.description.toString().split('.')[1];
+    return "$day. It's $description.";
+  }
+
+  String get _currentTemp {
+    return "${_bloc.selectedHourlyTemperature.temperature.current.toString()}°C";
+  }
+
   @override
   Widget build(BuildContext context) {
     var background = Sun(animation: _colorTween.animate(_animationController));
@@ -113,12 +126,12 @@ class _ForecastPageState extends State<ForecastPage>
       child: Column(
         children: <Widget>[
           ColorTransitionText(
-            text: "jhe",
+            text: _weatherDescription,
             style: Theme.of(context).textTheme.subhead,
             animation: _textColorTween.animate(_animationController),
           ),
           ColorTransitionText(
-            text: activeTabIndex.toString(),
+            text: _currentTemp,
             style: Theme.of(context).textTheme.display3,
             animation: _textColorTween.animate(_animationController),
           ),

@@ -53,7 +53,7 @@ abstract class Weather implements Built<Weather, WeatherBuilder> {
   DateTime get dateTime;
   @nullable
   Temperature get temperature;
-  String get description;
+  WeatherDescription get description;
   int get cloudCoveragePercentage;
   @nullable
   String get weatherIcon;

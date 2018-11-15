@@ -171,7 +171,7 @@ class _$WeatherSerializer implements StructuredSerializer<Weather> {
           specifiedType: const FullType(DateTime)),
       'description',
       serializers.serialize(object.description,
-          specifiedType: const FullType(String)),
+          specifiedType: const FullType(WeatherDescription)),
       'cloudCoveragePercentage',
       serializers.serialize(object.cloudCoveragePercentage,
           specifiedType: const FullType(int)),
@@ -217,7 +217,8 @@ class _$WeatherSerializer implements StructuredSerializer<Weather> {
           break;
         case 'description':
           result.description = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+                  specifiedType: const FullType(WeatherDescription))
+              as WeatherDescription;
           break;
         case 'cloudCoveragePercentage':
           result.cloudCoveragePercentage = serializers.deserialize(value,
@@ -534,7 +535,7 @@ class _$Weather extends Weather {
   @override
   final Temperature temperature;
   @override
-  final String description;
+  final WeatherDescription description;
   @override
   final int cloudCoveragePercentage;
   @override
@@ -626,9 +627,10 @@ class WeatherBuilder implements Builder<Weather, WeatherBuilder> {
   set temperature(TemperatureBuilder temperature) =>
       _$this._temperature = temperature;
 
-  String _description;
-  String get description => _$this._description;
-  set description(String description) => _$this._description = description;
+  WeatherDescription _description;
+  WeatherDescription get description => _$this._description;
+  set description(WeatherDescription description) =>
+      _$this._description = description;
 
   int _cloudCoveragePercentage;
   int get cloudCoveragePercentage => _$this._cloudCoveragePercentage;

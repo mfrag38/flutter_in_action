@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/main.dart';
 import 'package:weather_app/page/forecast_page.dart';
+import 'package:weather_app/styles.dart';
 
 /// TODO: make comment suck less.
 /// This widget houses all page widgets
