@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:weather_app/page/page_container.dart';
+import 'package:weather_app/page/forecast_page.dart';
 import 'package:weather_app/styles.dart';
 
 void main() {
@@ -10,8 +10,8 @@ void main() {
       .then((_) => runApp(new MyApp()));
 }
 
+// This widget is the root of your application.
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     var theme = ThemeData(
@@ -32,9 +32,7 @@ class MyApp extends StatelessWidget {
       title: 'Weather App',
       debugShowCheckedModeBanner: false,
       theme: theme,
-      home: PageContainer(),
+      home: ForecastPage(),
     );
   }
 }
-
-

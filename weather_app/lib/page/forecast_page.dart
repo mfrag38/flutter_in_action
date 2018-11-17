@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/blocs/forecast_bloc.dart';
 import 'package:weather_app/utils/date_utils.dart';
 import 'package:weather_app/utils/forecast_animation_utils.dart';
+import 'package:weather_app/widget/appbar.dart';
 import 'package:weather_app/widget/color_transition_text.dart';
 import 'package:weather_app/widget/color_transition_box.dart';
 import 'package:weather_app/widget/forecast_table.dart';
@@ -73,8 +74,8 @@ class _ForecastPageState extends State<ForecastPage>
 
   void _buildAnimationController() {
     _animationController?.dispose();
-    _animationController = AnimationController(
-        duration: Duration(milliseconds: 1000), vsync: this);
+    _animationController =
+        AnimationController(duration: Duration(milliseconds: 500), vsync: this);
   }
 
   void _buildTweens() {
@@ -112,9 +113,14 @@ class _ForecastPageState extends State<ForecastPage>
     return "${_bloc.selectedHourlyTemperature.temperature.current.toString()}°C";
   }
 
+  void handleDragUpdates(DragUpdateDetails details) {}
+
+  void handleDragEnd(DragEndDetails details) {}
+
   @override
   Widget build(BuildContext context) {
     var background = Sun(animation: _colorTween.animate(_animationController));
+
     var forecastContent = ForecastTableView(
       controller: _animationController,
       textColorTween: _textColorTween,
@@ -142,24 +148,37 @@ class _ForecastPageState extends State<ForecastPage>
     var timePickerRow = TimePickerRow(
         controller: _tabController, tabItems: _humanReadableHours);
 
-    return ColorTransitionBox(
-      animation: _backgroundColorTween.animate(_animationController),
-      child: Container(
-        child: Stack(
-          children: <Widget>[
-            SlideTransition(
-              position: _positionOffsetTween.animate(_animationController),
-              child: background,
+    return Scaffold(
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(appBarHeight(context)),
+          child: TransitionAppbar(
+            animation: _backgroundColorTween.animate(_animationController),
+            title: ColorTransitionText(
+              text: _bloc.selectedHourlyTemperature.city,
+              style: Theme.of(context).textTheme.headline,
+              animation: _textColorTween.animate(_animationController),
             ),
-            Column(
-              verticalDirection: VerticalDirection.up,
-              children: <Widget>[
-                forecastContent,
-                mainContent,
-                Flexible(child: timePickerRow),
-              ],
-            ),
-          ],
+          )),
+      body: ColorTransitionBox(
+        animation: _backgroundColorTween.animate(_animationController),
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 32.0),
+          child: Stack(
+            children: <Widget>[
+              SlideTransition(
+                position: _positionOffsetTween.animate(_animationController),
+                child: background,
+              ),
+              Column(
+                verticalDirection: VerticalDirection.up,
+                children: <Widget>[
+                  forecastContent,
+                  mainContent,
+                  Flexible(child: timePickerRow),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
