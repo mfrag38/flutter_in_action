@@ -6,8 +6,8 @@ import 'package:weather_app/models/models.dart';
 DateTime _today = new DateTime.now();
 DateTime startDateTime = new DateTime(_today.year, _today.month, _today.day, 0);
 DateTime dailyDate = _today;
-String city = "Portland";
 var _random = new math.Random();
+List<String> cities = ["Portland", "London", "Berlin", "Chaing Mai"];
 
 int generateCloudCoverageNum(WeatherDescription description) {
   switch (description) {
@@ -39,7 +39,7 @@ WeatherDescription generateTimeAwareWeatherDescription(DateTime time) {
   return description;
 }
 
-ForecastDay dailyForecastGenerator(int low, int high) {
+ForecastDay dailyForecastGenerator(String city, int low, int high) {
   ListBuilder<Weather> forecasts = ListBuilder();
   int runningMin = 555;
   int runningMax = -555;
@@ -71,11 +71,11 @@ ForecastDay dailyForecastGenerator(int low, int high) {
   return forecastDay;
 }
 
-Forecast generateTenDayForecast() {
+Forecast generateTenDayForecast(String city) {
   ListBuilder<ForecastDay> tenDayForecast = ListBuilder();
 
   List.generate(10, (int index) {
-    tenDayForecast.add(dailyForecastGenerator(2, 10));
+    tenDayForecast.add(dailyForecastGenerator(city, 2, 10));
   });
 
   return new Forecast((b) => b..days = tenDayForecast);

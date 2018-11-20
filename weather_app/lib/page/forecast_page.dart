@@ -10,6 +10,11 @@ import 'package:weather_app/widget/sun_background.dart';
 import 'package:weather_app/widget/time_picker_row.dart';
 
 class ForecastPage extends StatefulWidget {
+  final String city;
+  final PopupMenuButton menu;
+
+  const ForecastPage({Key key, this.city, this.menu}) : super(key: key);
+
   @override
   _ForecastPageState createState() => _ForecastPageState();
 }
@@ -32,7 +37,17 @@ class _ForecastPageState extends State<ForecastPage>
   @override
   void initState() {
     super.initState();
-    _bloc = new ForecastBloc();
+    _init();
+  }
+
+  @override
+  void didUpdateWidget(ForecastPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _init();
+  }
+
+  void _init() {
+    _bloc = new ForecastBloc(widget.city);
     var startTime = _bloc.selectedHourlyTemperature.dateTime.hour;
     var startTabIndex = hours.indexOf(startTime);
     _tabController = TabController(
@@ -113,10 +128,6 @@ class _ForecastPageState extends State<ForecastPage>
     return "${_bloc.selectedHourlyTemperature.temperature.current.toString()}°C";
   }
 
-  void handleDragUpdates(DragUpdateDetails details) {}
-
-  void handleDragEnd(DragEndDetails details) {}
-
   @override
   Widget build(BuildContext context) {
     var background = Sun(animation: _colorTween.animate(_animationController));
@@ -150,15 +161,17 @@ class _ForecastPageState extends State<ForecastPage>
 
     return Scaffold(
       appBar: PreferredSize(
-          preferredSize: Size.fromHeight(appBarHeight(context)),
-          child: TransitionAppbar(
-            animation: _backgroundColorTween.animate(_animationController),
-            title: ColorTransitionText(
-              text: _bloc.selectedHourlyTemperature.city,
-              style: Theme.of(context).textTheme.headline,
-              animation: _textColorTween.animate(_animationController),
-            ),
-          )),
+        preferredSize: Size.fromHeight(appBarHeight(context)),
+        child: TransitionAppbar(
+          animation: _backgroundColorTween.animate(_animationController),
+          title: ColorTransitionText(
+            text: _bloc.selectedHourlyTemperature.city,
+            style: Theme.of(context).textTheme.headline,
+            animation: _textColorTween.animate(_animationController),
+          ),
+          actionIcon: widget.menu,
+        ),
+      ),
       body: ColorTransitionBox(
         animation: _backgroundColorTween.animate(_animationController),
         child: Container(
@@ -169,6 +182,7 @@ class _ForecastPageState extends State<ForecastPage>
                 position: _positionOffsetTween.animate(_animationController),
                 child: background,
               ),
+              Clouds(),
               Column(
                 verticalDirection: VerticalDirection.up,
                 children: <Widget>[
