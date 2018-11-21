@@ -1,24 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/models/models.dart';
+import 'package:weather_app/models/src/app_settings.dart';
 import 'package:weather_app/utils/date_utils.dart';
 import 'package:weather_app/utils/forecast_animation_utils.dart';
 import 'package:weather_app/widget/color_transition_icon.dart';
 import 'package:weather_app/widget/color_transition_text.dart';
 
 class ForecastTableView extends StatelessWidget {
+  final AppSettings settings;
   final AnimationController controller;
   final Tween<Color> textColorTween;
   final Forecast forecast;
 
-  ForecastTableView({this.textColorTween, this.controller, this.forecast});
+  ForecastTableView(
+      {this.textColorTween, this.controller, this.forecast, this.settings});
 
   IconData _getWeatherIcon(Weather weather) {
     return weatherIcons[weather.description];
   }
 
+  int _temperature(int temp) {
+    if (settings.selectedTemperature == TemperatureUnit.fahrenheit) {
+      return Temperature.celsiusToFahrenheit(temp);
+    }
+    return temp;
+  }
+
   @override
   Widget build(BuildContext context) {
-    var textStyle = Theme.of(context).textTheme.caption;
+    var textStyle = Theme.of(context).textTheme.body1;
     return Padding(
       padding: const EdgeInsets.only(
         left: 24.0,
@@ -57,14 +67,14 @@ class ForecastTableView extends StatelessWidget {
               ),
               TableCell(
                 child: ColorTransitionText(
-                  text: day.max.toString(),
+                  text: _temperature(day.max).toString(),
                   style: textStyle,
                   animation: textColorTween.animate(controller),
                 ),
               ),
               TableCell(
                 child: ColorTransitionText(
-                  text: day.min.toString(),
+                  text: _temperature(day.min).toString(),
                   style: textStyle,
                   animation: textColorTween.animate(controller),
                 ),

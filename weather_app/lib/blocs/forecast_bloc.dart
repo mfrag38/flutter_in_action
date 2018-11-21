@@ -9,7 +9,7 @@ class ForecastBloc {
   Weather selectedHourlyTemperature;
   DateTime _today = new DateTime.now();
 
-  ForecastBloc (this.city) {
+  ForecastBloc(this.city) {
     forecast = weatherData.generateTenDayForecast(city);
     selectedDay = Forecast.getSelectedDayForecast(
         forecast, DateTime(_today.year, _today.month, _today.day));
@@ -21,7 +21,8 @@ class ForecastBloc {
     var hour = getSelectedHourFromTabIndex(index);
     var newSelection = ForecastDay.getHourSelection(selectedDay, hour);
     var endAnimationState = new ForecastAnimationState.stateForNextSelection(
-        newSelection.dateTime.hour);
+        newSelection.dateTime.hour, newSelection.description);
+
     // update selectedHourlyTemperature to currentChoice
     selectedHourlyTemperature = newSelection;
     return endAnimationState;
@@ -31,3 +32,4 @@ class ForecastBloc {
     return selectedDay.hourlyWeather[index].dateTime.hour;
   }
 }
+

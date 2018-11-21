@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:weather_app/models/src/app_settings.dart';
 import 'package:weather_app/page/page_container.dart';
 import 'package:weather_app/styles.dart';
 
 void main() {
+  AppSettings settings = new AppSettings();
+
   // Don't allow landscape mode
   SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
-      .then((_) => runApp(new MyApp()));
+      .then((_) => runApp(new MyApp(settings: settings)));
 }
 
 class MyApp extends StatelessWidget {
+  final AppSettings settings;
+
+  const MyApp({Key key, this.settings}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     var theme = ThemeData(
       fontFamily: "Cabin",
-      primaryColor: Color(0xFFFAF6E8),
-      accentColor: Color(0xFFEBB9B7),
+      primaryColor: AppColor.midnightSky,
+      accentColor: AppColor.midnightCloud,
       primaryTextTheme: Theme.of(context).textTheme.apply(
             bodyColor: AppColor.textColorDark,
             displayColor: AppColor.textColorDark,
@@ -31,7 +38,7 @@ class MyApp extends StatelessWidget {
       title: 'Weather App',
       debugShowCheckedModeBanner: false,
       theme: theme,
-      home: PageContainer(),
+      home: PageContainer(settings: settings),
     );
   }
 }

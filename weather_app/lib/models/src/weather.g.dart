@@ -19,14 +19,11 @@ part of 'weather.dart';
 // ignore_for_file: unnecessary_new
 // ignore_for_file: test_types_in_equals
 
-const TemperatureUnit _$kelvin = const TemperatureUnit._('kelvin');
 const TemperatureUnit _$celsius = const TemperatureUnit._('celsius');
 const TemperatureUnit _$fahrenheit = const TemperatureUnit._('fahrenheit');
 
 TemperatureUnit _$valueOf(String name) {
   switch (name) {
-    case 'kelvin':
-      return _$kelvin;
     case 'celsius':
       return _$celsius;
     case 'fahrenheit':
@@ -38,7 +35,6 @@ TemperatureUnit _$valueOf(String name) {
 
 final BuiltSet<TemperatureUnit> _$values =
     new BuiltSet<TemperatureUnit>(const <TemperatureUnit>[
-  _$kelvin,
   _$celsius,
   _$fahrenheit,
 ]);

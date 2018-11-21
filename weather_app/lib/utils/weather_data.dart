@@ -25,9 +25,10 @@ int generateCloudCoverageNum(WeatherDescription description) {
 
 WeatherDescription generateTimeAwareWeatherDescription(DateTime time) {
   var hour = time.hour;
+
   var descriptions = WeatherDescription.values;
   var description = descriptions[_random.nextInt(descriptions.length - 1)];
-  if (hour < 6 || hour > 6) {
+  if (hour < 6 || hour > 18) {
     if (description == WeatherDescription.sunny) {
       description = WeatherDescription.clear;
     }
