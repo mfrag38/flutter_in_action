@@ -53,7 +53,7 @@ abstract class Weather implements Built<Weather, WeatherBuilder> {
   DateTime get dateTime;
   @nullable
   Temperature get temperature;
-  String get description;
+  WeatherDescription get description;
   int get cloudCoveragePercentage;
   @nullable
   String get weatherIcon;
@@ -72,13 +72,14 @@ abstract class Temperature implements Built<Temperature, TemperatureBuilder> {
 
   factory Temperature([updates(TemperatureBuilder b)]) = _$Temperature;
   static Serializer<Temperature> get serializer => _$temperatureSerializer;
+
+  static int celsiusToFahrenheit(int temp) => (temp * 9 / 5 + 32).floor();
 }
 
 class TemperatureUnit extends EnumClass {
   static Serializer<TemperatureUnit> get serializer =>
       _$temperatureUnitSerializer;
 
-  static const TemperatureUnit kelvin = _$kelvin;
   static const TemperatureUnit celsius = _$celsius;
   static const TemperatureUnit fahrenheit = _$fahrenheit;
 

@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/blocs/forecast_bloc.dart';
+import 'package:weather_app/models/src/app_settings.dart';
+import 'package:weather_app/models/src/weather.dart';
+import 'package:weather_app/utils/date_utils.dart';
 import 'package:weather_app/utils/forecast_animation_utils.dart';
+import 'package:weather_app/widget/appbar.dart';
+import 'package:weather_app/widget/clouds_background.dart';
 import 'package:weather_app/widget/color_transition_text.dart';
 import 'package:weather_app/widget/color_transition_box.dart';
 import 'package:weather_app/widget/forecast_table.dart';
@@ -8,6 +13,17 @@ import 'package:weather_app/widget/sun_background.dart';
 import 'package:weather_app/widget/time_picker_row.dart';
 
 class ForecastPage extends StatefulWidget {
+  final PopupMenuButton menu;
+  final Widget settingsButton;
+  final AppSettings settings;
+
+  const ForecastPage({
+    Key key,
+    this.menu,
+    this.settingsButton,
+    @required this.settings,
+  }) : super(key: key);
+
   @override
   _ForecastPageState createState() => _ForecastPageState();
 }
@@ -17,10 +33,13 @@ class _ForecastPageState extends State<ForecastPage>
   TabController _tabController;
   int activeTabIndex;
   AnimationController _animationController;
+  AnimationController _weatherConditionAnimationController;
   ColorTween _colorTween;
   ColorTween _backgroundColorTween;
   ColorTween _textColorTween;
+  ColorTween _cloudColorTween;
   Tween<Offset> _positionOffsetTween;
+  TweenSequence<Offset> _cloudPositionOffsetTween;
   ForecastBloc _bloc;
   ForecastAnimationState currentAnimationState;
   ForecastAnimationState nextAnimationState;
@@ -30,7 +49,17 @@ class _ForecastPageState extends State<ForecastPage>
   @override
   void initState() {
     super.initState();
-    _bloc = new ForecastBloc();
+    _init();
+  }
+
+  @override
+  void didUpdateWidget(ForecastPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _init();
+  }
+
+  void _init() {
+    _bloc = new ForecastBloc(widget.settings.selectedCity);
     var startTime = _bloc.selectedHourlyTemperature.dateTime.hour;
     var startTabIndex = hours.indexOf(startTime);
     _tabController = TabController(
@@ -68,11 +97,15 @@ class _ForecastPageState extends State<ForecastPage>
 
   void _initAnimation() {
     _animationController.forward();
+    _weatherConditionAnimationController.forward();
   }
 
   void _buildAnimationController() {
     _animationController?.dispose();
-    _animationController = AnimationController(
+    _animationController =
+        AnimationController(duration: Duration(milliseconds: 500), vsync: this);
+    _weatherConditionAnimationController?.dispose();
+    _weatherConditionAnimationController = AnimationController(
         duration: Duration(milliseconds: 1000), vsync: this);
   }
 
@@ -89,9 +122,35 @@ class _ForecastPageState extends State<ForecastPage>
       begin: currentAnimationState.textColor,
       end: nextAnimationState.textColor,
     );
+    _cloudColorTween = new ColorTween(
+      begin: currentAnimationState.cloudColor,
+      end: nextAnimationState.cloudColor,
+    );
     _positionOffsetTween = new Tween<Offset>(
-      begin: currentAnimationState.offsetPosition,
-      end: nextAnimationState.offsetPosition,
+      begin: currentAnimationState.sunOffsetPosition,
+      end: nextAnimationState.sunOffsetPosition,
+    );
+
+    var cloudOffsetSequence = new OffsetSequence.fromBeginAndEndPositions(
+        currentAnimationState.cloudOffsetPosition,
+        nextAnimationState.cloudOffsetPosition);
+    _cloudPositionOffsetTween = new TweenSequence<Offset>(
+      <TweenSequenceItem<Offset>>[
+        TweenSequenceItem<Offset>(
+          weight: 50.0,
+          tween: Tween<Offset>(
+            begin: cloudOffsetSequence.positionA,
+            end: cloudOffsetSequence.positionB,
+          ),
+        ),
+        TweenSequenceItem<Offset>(
+          weight: 50.0,
+          tween: Tween<Offset>(
+            begin: cloudOffsetSequence.positionB,
+            end: cloudOffsetSequence.positionC,
+          ),
+        ),
+      ],
     );
   }
 
@@ -99,10 +158,34 @@ class _ForecastPageState extends State<ForecastPage>
     return hours.map((hour) => '$hour:00').toList();
   }
 
+  String get _weatherDescription {
+    var day =
+        DateUtils.weekdays[_bloc.selectedHourlyTemperature.dateTime.weekday];
+    var description =
+        _bloc.selectedHourlyTemperature.description.toString().split('.')[1];
+    return "$day. ${description.replaceFirst(description[0], description[0].toUpperCase())}.";
+  }
+
+  String get _currentTemp {
+    var unit =
+        AppSettings.temperatureLabels[widget.settings.selectedTemperature];
+    var temp = _bloc.selectedHourlyTemperature.temperature.current;
+
+    if (widget.settings.selectedTemperature == TemperatureUnit.fahrenheit) {
+      temp = Temperature.celsiusToFahrenheit(temp);
+    }
+    return '$temp $unit';
+  }
+
+  bool get isRaining =>
+      _bloc.selectedHourlyTemperature.description == WeatherDescription.rain;
+
   @override
   Widget build(BuildContext context) {
     var background = Sun(animation: _colorTween.animate(_animationController));
+
     var forecastContent = ForecastTableView(
+      settings: widget.settings,
       controller: _animationController,
       textColorTween: _textColorTween,
       forecast: _bloc.forecast,
@@ -113,12 +196,12 @@ class _ForecastPageState extends State<ForecastPage>
       child: Column(
         children: <Widget>[
           ColorTransitionText(
-            text: "jhe",
-            style: Theme.of(context).textTheme.subhead,
+            text: _weatherDescription,
+            style: Theme.of(context).textTheme.headline,
             animation: _textColorTween.animate(_animationController),
           ),
           ColorTransitionText(
-            text: activeTabIndex.toString(),
+            text: _currentTemp,
             style: Theme.of(context).textTheme.display3,
             animation: _textColorTween.animate(_animationController),
           ),
@@ -129,24 +212,50 @@ class _ForecastPageState extends State<ForecastPage>
     var timePickerRow = TimePickerRow(
         controller: _tabController, tabItems: _humanReadableHours);
 
-    return ColorTransitionBox(
-      animation: _backgroundColorTween.animate(_animationController),
-      child: Container(
-        child: Stack(
-          children: <Widget>[
-            SlideTransition(
-              position: _positionOffsetTween.animate(_animationController),
-              child: background,
-            ),
-            Column(
-              verticalDirection: VerticalDirection.up,
-              children: <Widget>[
-                forecastContent,
-                mainContent,
-                Flexible(child: timePickerRow),
-              ],
-            ),
-          ],
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(appBarHeight(context)),
+        child: TransitionAppbar(
+          animation: _backgroundColorTween.animate(_animationController),
+          title: ColorTransitionText(
+            text: _bloc.selectedHourlyTemperature.city,
+            style: Theme.of(context).textTheme.headline,
+            animation: _textColorTween.animate(_animationController),
+          ),
+          actionIcon: widget.settingsButton,
+          leadingAction: widget.menu,
+        ),
+      ),
+      body: ColorTransitionBox(
+        animation: _backgroundColorTween.animate(_animationController),
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 32.0),
+          child: Stack(
+            children: <Widget>[
+              SlideTransition(
+                key: Key("sun"),
+                position: _positionOffsetTween.animate(_animationController),
+                child: background,
+              ),
+              SlideTransition(
+                position: _cloudPositionOffsetTween
+                    .animate(_weatherConditionAnimationController),
+                child: Clouds(
+                  key: Key("clouds"),
+                  isRaining: isRaining,
+                  animation: _cloudColorTween.animate(_animationController),
+                ),
+              ),
+              Column(
+                verticalDirection: VerticalDirection.up,
+                children: <Widget>[
+                  forecastContent,
+                  mainContent,
+                  Flexible(child: timePickerRow),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
