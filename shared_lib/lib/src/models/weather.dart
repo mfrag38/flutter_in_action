@@ -5,6 +5,7 @@ import 'package:built_value/serializer.dart';
 part 'weather.g.dart';
 
 abstract class Forecast implements Built<Forecast, ForecastBuilder> {
+  String get city;
   BuiltList<ForecastDay> get days;
   Forecast._();
 

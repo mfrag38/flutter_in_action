@@ -86,6 +86,8 @@ class _$ForecastSerializer implements StructuredSerializer<Forecast> {
   Iterable serialize(Serializers serializers, Forecast object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
+      'city',
+      serializers.serialize(object.city, specifiedType: const FullType(String)),
       'days',
       serializers.serialize(object.days,
           specifiedType:
@@ -106,6 +108,10 @@ class _$ForecastSerializer implements StructuredSerializer<Forecast> {
       iterator.moveNext();
       final dynamic value = iterator.current;
       switch (key) {
+        case 'city':
+          result.city = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
         case 'days':
           result.days.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
@@ -346,12 +352,17 @@ class _$WeatherDescriptionSerializer
 
 class _$Forecast extends Forecast {
   @override
+  final String city;
+  @override
   final BuiltList<ForecastDay> days;
 
   factory _$Forecast([void updates(ForecastBuilder b)]) =>
       (new ForecastBuilder()..update(updates)).build();
 
-  _$Forecast._({this.days}) : super._() {
+  _$Forecast._({this.city, this.days}) : super._() {
+    if (city == null) {
+      throw new BuiltValueNullFieldError('Forecast', 'city');
+    }
     if (days == null) {
       throw new BuiltValueNullFieldError('Forecast', 'days');
     }
@@ -367,23 +378,29 @@ class _$Forecast extends Forecast {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is Forecast && days == other.days;
+    return other is Forecast && city == other.city && days == other.days;
   }
 
   @override
   int get hashCode {
-    return $jf($jc(0, days.hashCode));
+    return $jf($jc($jc(0, city.hashCode), days.hashCode));
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('Forecast')..add('days', days))
+    return (newBuiltValueToStringHelper('Forecast')
+          ..add('city', city)
+          ..add('days', days))
         .toString();
   }
 }
 
 class ForecastBuilder implements Builder<Forecast, ForecastBuilder> {
   _$Forecast _$v;
+
+  String _city;
+  String get city => _$this._city;
+  set city(String city) => _$this._city = city;
 
   ListBuilder<ForecastDay> _days;
   ListBuilder<ForecastDay> get days =>
@@ -394,6 +411,7 @@ class ForecastBuilder implements Builder<Forecast, ForecastBuilder> {
 
   ForecastBuilder get _$this {
     if (_$v != null) {
+      _city = _$v.city;
       _days = _$v.days?.toBuilder();
       _$v = null;
     }
@@ -417,7 +435,7 @@ class ForecastBuilder implements Builder<Forecast, ForecastBuilder> {
   _$Forecast build() {
     _$Forecast _$result;
     try {
-      _$result = _$v ?? new _$Forecast._(days: days.build());
+      _$result = _$v ?? new _$Forecast._(city: city, days: days.build());
     } catch (_) {
       String _$failedField;
       try {

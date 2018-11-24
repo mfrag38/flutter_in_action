@@ -31,4 +31,3 @@ class ForecastBloc {
     return selectedDay.hourlyWeather[index].dateTime.hour;
   }
 }
-

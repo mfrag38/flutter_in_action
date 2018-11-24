@@ -163,7 +163,7 @@ class _ForecastPageState extends State<ForecastPage>
     var day =
         DateUtils.weekdays[_bloc.selectedHourlyTemperature.dateTime.weekday];
     var description =
-        _bloc.selectedHourlyTemperature.description.toString().split('.')[1];
+        _bloc.selectedHourlyTemperature.description.toString();
     return "$day. ${description.replaceFirst(description[0], description[0].toUpperCase())}.";
   }
 

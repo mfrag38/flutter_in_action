@@ -12,7 +12,7 @@ DateTime _today = new DateTime.now();
 DateTime startDateTime = new DateTime(_today.year, _today.month, _today.day, 0);
 DateTime dailyDate = _today;
 var _random = new math.Random();
-List<String> cities = ["Portland", "London", "Berlin", "Chaing Mai"];
+List<String> cities = allCities;
 
 Serializers standardSerializers = serializers;
 
@@ -62,7 +62,7 @@ ForecastDay dailyForecastGenerator(String city, int low, int high) {
       ..temperatureUnit = TemperatureUnit.celsius;
     forecasts.add(Weather((b) => b
       ..city = city
-      ..dateTime = startDateTime.toUtc()
+      ..dateTime = startDateTime
       ..description = randomDescription
       ..cloudCoveragePercentage = generateCloudCoverageNum(randomDescription)
       ..temperature = tempBuilder));
@@ -74,7 +74,7 @@ ForecastDay dailyForecastGenerator(String city, int low, int high) {
     ..hourlyWeather = forecasts
     ..min = runningMin
     ..max = runningMax
-    ..date = dailyDate.toUtc());
+    ..date = dailyDate);
   dailyDate.add(Duration(days: 1));
   return forecastDay;
 }
@@ -86,9 +86,13 @@ Forecast generateTenDayForecast(String city) {
     tenDayForecast.add(dailyForecastGenerator(city, 2, 10));
   });
 
-  return new Forecast((b) => b..days = tenDayForecast);
+  return new Forecast((b) => b
+    ..days = tenDayForecast
+    ..city = city);
 }
 
+
+/// CLI Tool to generate JSON
 class GenerateWeatherDataCommand extends Command {
   GenerateWeatherDataCommand();
 
@@ -99,8 +103,11 @@ class GenerateWeatherDataCommand extends Command {
   String get name => 'data';
 
   Future run() async {
-    var data =
-        standardSerializers.serialize(generateTenDayForecast('Portland'));
-    var file = new File('data.json').writeAsString(json.encode(data));
+    var data = {};
+    for (var city in allCities) {
+      data[city] = standardSerializers.serialize(generateTenDayForecast(city));
+    }
+    var file = new File('lib/src/content/weather_data.json')
+        .writeAsString(json.encode(data));
   }
 }
