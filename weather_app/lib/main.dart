@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:weather_app/models/src/app_settings.dart';
+import 'package:shared_lib/weather_app.dart';
 import 'package:weather_app/page/page_container.dart';
 import 'package:weather_app/styles.dart';
 

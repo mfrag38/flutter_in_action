@@ -1,6 +1,5 @@
 import 'package:weather_app/models/models.dart';
-import 'package:weather_app/utils/forecast_animation_utils.dart';
-import 'package:weather_app/utils/weather_data.dart' as weatherData;
+import 'package:shared_lib/weather_app.dart';
 
 class ForecastBloc {
   final String city;
@@ -10,7 +9,7 @@ class ForecastBloc {
   DateTime _today = new DateTime.now();
 
   ForecastBloc(this.city) {
-    forecast = weatherData.generateTenDayForecast(city);
+    forecast = generateTenDayForecast(city);
     selectedDay = Forecast.getSelectedDayForecast(
         forecast, DateTime(_today.year, _today.month, _today.day));
     selectedHourlyTemperature = ForecastDay.getHourSelection(
