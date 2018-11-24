@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:shared_lib/weather_app.dart';
+import 'package:shared_lib/date_utils.dart';
 import 'package:weather_app/blocs/forecast_bloc.dart';
-import 'package:weather_app/models/src/app_settings.dart';
-import 'package:weather_app/models/src/weather.dart';
-import 'package:weather_app/utils/date_utils.dart';
-import 'package:weather_app/utils/forecast_animation_utils.dart';
-import 'package:weather_app/widget/appbar.dart';
+import 'package:weather_app/models/models.dart';
+
+import 'package:weather_app/utils/forecast_animation_utils.dart' as utils;
+import 'package:weather_app/widget/transition_appbar.dart';
 import 'package:weather_app/widget/clouds_background.dart';
 import 'package:weather_app/widget/color_transition_text.dart';
 import 'package:weather_app/widget/color_transition_box.dart';
@@ -61,9 +62,9 @@ class _ForecastPageState extends State<ForecastPage>
   void _init() {
     _bloc = new ForecastBloc(widget.settings.selectedCity);
     var startTime = _bloc.selectedHourlyTemperature.dateTime.hour;
-    var startTabIndex = hours.indexOf(startTime);
+    var startTabIndex = utils.hours.indexOf(startTime);
     _tabController = TabController(
-        length: hours.length, vsync: this, initialIndex: startTabIndex);
+        length: utils.hours.length, vsync: this, initialIndex: startTabIndex);
     _tabController.addListener(handleTabChange);
     currentAnimationState =
         _bloc.getDataForNextAnimationState(_tabController.index);
@@ -155,7 +156,7 @@ class _ForecastPageState extends State<ForecastPage>
   }
 
   List<String> get _humanReadableHours {
-    return hours.map((hour) => '$hour:00').toList();
+    return utils.hours.map((hour) => '$hour:00').toList();
   }
 
   String get _weatherDescription {
@@ -167,8 +168,7 @@ class _ForecastPageState extends State<ForecastPage>
   }
 
   String get _currentTemp {
-    var unit =
-        AppSettings.temperatureLabels[widget.settings.selectedTemperature];
+    var unit = utils.temperatureLabels[widget.settings.selectedTemperature];
     var temp = _bloc.selectedHourlyTemperature.temperature.current;
 
     if (widget.settings.selectedTemperature == TemperatureUnit.fahrenheit) {
@@ -214,7 +214,7 @@ class _ForecastPageState extends State<ForecastPage>
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(appBarHeight(context)),
+        preferredSize: Size.fromHeight(utils.appBarHeight(context)),
         child: TransitionAppbar(
           animation: _backgroundColorTween.animate(_animationController),
           title: ColorTransitionText(

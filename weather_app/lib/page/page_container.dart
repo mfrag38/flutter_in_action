@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/models/src/app_settings.dart';
+import 'package:shared_lib/weather_app.dart';
 import 'package:weather_app/page/forecast_page.dart';
 import 'package:weather_app/page/settings_page.dart';
 import 'package:weather_app/styles.dart';
+import 'package:weather_app/utils/forecast_animation_utils.dart' as utils;
 
 class PageContainer extends StatefulWidget {
   final AppSettings settings;
@@ -42,7 +43,7 @@ class _PageContainerState extends State<PageContainer> {
   FlatButton get settingsButton {
     return FlatButton(
         child: Text(
-          AppSettings.temperatureLabels[settings.selectedTemperature],
+          utils.temperatureLabels[settings.selectedTemperature],
           style: Theme.of(context).textTheme.headline,
         ),
         onPressed: _showSettingsPage);

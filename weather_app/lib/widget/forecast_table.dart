@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/models/models.dart';
-import 'package:weather_app/models/src/app_settings.dart';
-import 'package:weather_app/utils/date_utils.dart';
+import 'package:shared_lib/date_utils.dart';
+import 'package:shared_lib/weather_app.dart';
 import 'package:weather_app/utils/forecast_animation_utils.dart';
 import 'package:weather_app/widget/color_transition_icon.dart';
 import 'package:weather_app/widget/color_transition_text.dart';

@@ -8,12 +8,12 @@ class SegmentedControl extends StatefulWidget {
   final Key key;
 
   SegmentedControl(
-      this.segments, {
-        this.key,
-        this.onSelectionChanged,
-        this.editable = true,
-        this.initialSelectionIndex = 0,
-      }) : super(key: key);
+    this.segments, {
+    this.key,
+    this.onSelectionChanged,
+    this.editable = true,
+    this.initialSelectionIndex = 0,
+  }) : super(key: key);
 
   @override
   _SegmentedControlState createState() => new _SegmentedControlState();
@@ -56,37 +56,39 @@ class _SegmentedControlState extends State<SegmentedControl> {
         childBorders.add(isEditable());
       }
 
-      segmentWidgets.add(new Expanded(
-        child: new InkWell(
-          onTap: widget.editable
-              ? () => handleSelect(widget.segments.indexOf(segment))
-              : null,
-          child: new Container(
-            padding: new EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-            decoration: new BoxDecoration(
-              color: selectedIndex == widget.segments.indexOf(segment)
-                  ? isEditable()
-                  : Colors.white,
-              border: new Border(
-                  right: new BorderSide(
-                      color:
-                      childBorders[idx]) // hide right border on last child
-              ),
-            ),
-            child: new Text(
-              segment,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: new TextStyle(
+      segmentWidgets.add(
+        new Expanded(
+          child: new InkWell(
+            onTap: widget.editable
+                ? () => handleSelect(widget.segments.indexOf(segment))
+                : null,
+            child: new Container(
+              padding: new EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+              decoration: new BoxDecoration(
                 color: selectedIndex == widget.segments.indexOf(segment)
-                    ? Colors.white
-                    : isEditable(),
+                    ? isEditable()
+                    : Colors.white,
+                border: new Border(
+                    right: new BorderSide(
+                        color: childBorders[
+                            idx]) // hide right border on last child
+                    ),
+              ),
+              child: new Text(
+                segment,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: new TextStyle(
+                  color: selectedIndex == widget.segments.indexOf(segment)
+                      ? Colors.white
+                      : isEditable(),
+                ),
               ),
             ),
           ),
         ),
-      ));
+      );
     });
 
     return segmentWidgets;
