@@ -5,6 +5,12 @@ import 'package:shared_lib/src/models/weather.dart';
 
 part 'serializers.g.dart';
 
-@SerializersFor(const [Forecast, ForecastDay, Weather, TemperatureUnit])
+@SerializersFor(const [
+  Forecast,
+  ForecastDay,
+  Weather,
+  TemperatureUnit,
+  WeatherDescription,
+])
 final Serializers serializers =
     (_$serializers.toBuilder()..addPlugin(StandardJsonPlugin())).build();

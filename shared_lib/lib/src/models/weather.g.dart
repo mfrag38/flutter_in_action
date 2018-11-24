@@ -22,7 +22,7 @@ part of 'weather.dart';
 const TemperatureUnit _$celsius = const TemperatureUnit._('celsius');
 const TemperatureUnit _$fahrenheit = const TemperatureUnit._('fahrenheit');
 
-TemperatureUnit _$valueOf(String name) {
+TemperatureUnit _$valueOfTemperatureUnit(String name) {
   switch (name) {
     case 'celsius':
       return _$celsius;
@@ -33,10 +33,38 @@ TemperatureUnit _$valueOf(String name) {
   }
 }
 
-final BuiltSet<TemperatureUnit> _$values =
+final BuiltSet<TemperatureUnit> _$tempatureUnitValues =
     new BuiltSet<TemperatureUnit>(const <TemperatureUnit>[
   _$celsius,
   _$fahrenheit,
+]);
+
+const WeatherDescription _$clear = const WeatherDescription._('clear');
+const WeatherDescription _$cloudy = const WeatherDescription._('cloudy');
+const WeatherDescription _$sunny = const WeatherDescription._('sunny');
+const WeatherDescription _$rain = const WeatherDescription._('rain');
+
+WeatherDescription _$valueOfWeatherDescription(String name) {
+  switch (name) {
+    case 'clear':
+      return _$clear;
+    case 'cloudy':
+      return _$cloudy;
+    case 'sunny':
+      return _$sunny;
+    case 'rain':
+      return _$rain;
+    default:
+      throw new ArgumentError(name);
+  }
+}
+
+final BuiltSet<WeatherDescription> _$weatherDescriptionValues =
+    new BuiltSet<WeatherDescription>(const <WeatherDescription>[
+  _$clear,
+  _$cloudy,
+  _$sunny,
+  _$rain,
 ]);
 
 Serializer<Forecast> _$forecastSerializer = new _$ForecastSerializer();
@@ -45,6 +73,8 @@ Serializer<Weather> _$weatherSerializer = new _$WeatherSerializer();
 Serializer<Temperature> _$temperatureSerializer = new _$TemperatureSerializer();
 Serializer<TemperatureUnit> _$temperatureUnitSerializer =
     new _$TemperatureUnitSerializer();
+Serializer<WeatherDescription> _$weatherDescriptionSerializer =
+    new _$WeatherDescriptionSerializer();
 
 class _$ForecastSerializer implements StructuredSerializer<Forecast> {
   @override
@@ -56,6 +86,8 @@ class _$ForecastSerializer implements StructuredSerializer<Forecast> {
   Iterable serialize(Serializers serializers, Forecast object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
+      'city',
+      serializers.serialize(object.city, specifiedType: const FullType(String)),
       'days',
       serializers.serialize(object.days,
           specifiedType:
@@ -76,6 +108,10 @@ class _$ForecastSerializer implements StructuredSerializer<Forecast> {
       iterator.moveNext();
       final dynamic value = iterator.current;
       switch (key) {
+        case 'city':
+          result.city = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
         case 'days':
           result.days.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
@@ -296,14 +332,37 @@ class _$TemperatureUnitSerializer
       TemperatureUnit.valueOf(serialized as String);
 }
 
+class _$WeatherDescriptionSerializer
+    implements PrimitiveSerializer<WeatherDescription> {
+  @override
+  final Iterable<Type> types = const <Type>[WeatherDescription];
+  @override
+  final String wireName = 'WeatherDescription';
+
+  @override
+  Object serialize(Serializers serializers, WeatherDescription object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      object.name;
+
+  @override
+  WeatherDescription deserialize(Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      WeatherDescription.valueOf(serialized as String);
+}
+
 class _$Forecast extends Forecast {
+  @override
+  final String city;
   @override
   final BuiltList<ForecastDay> days;
 
   factory _$Forecast([void updates(ForecastBuilder b)]) =>
       (new ForecastBuilder()..update(updates)).build();
 
-  _$Forecast._({this.days}) : super._() {
+  _$Forecast._({this.city, this.days}) : super._() {
+    if (city == null) {
+      throw new BuiltValueNullFieldError('Forecast', 'city');
+    }
     if (days == null) {
       throw new BuiltValueNullFieldError('Forecast', 'days');
     }
@@ -319,23 +378,29 @@ class _$Forecast extends Forecast {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is Forecast && days == other.days;
+    return other is Forecast && city == other.city && days == other.days;
   }
 
   @override
   int get hashCode {
-    return $jf($jc(0, days.hashCode));
+    return $jf($jc($jc(0, city.hashCode), days.hashCode));
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('Forecast')..add('days', days))
+    return (newBuiltValueToStringHelper('Forecast')
+          ..add('city', city)
+          ..add('days', days))
         .toString();
   }
 }
 
 class ForecastBuilder implements Builder<Forecast, ForecastBuilder> {
   _$Forecast _$v;
+
+  String _city;
+  String get city => _$this._city;
+  set city(String city) => _$this._city = city;
 
   ListBuilder<ForecastDay> _days;
   ListBuilder<ForecastDay> get days =>
@@ -346,6 +411,7 @@ class ForecastBuilder implements Builder<Forecast, ForecastBuilder> {
 
   ForecastBuilder get _$this {
     if (_$v != null) {
+      _city = _$v.city;
       _days = _$v.days?.toBuilder();
       _$v = null;
     }
@@ -369,7 +435,7 @@ class ForecastBuilder implements Builder<Forecast, ForecastBuilder> {
   _$Forecast build() {
     _$Forecast _$result;
     try {
-      _$result = _$v ?? new _$Forecast._(days: days.build());
+      _$result = _$v ?? new _$Forecast._(city: city, days: days.build());
     } catch (_) {
       String _$failedField;
       try {

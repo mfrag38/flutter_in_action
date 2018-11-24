@@ -1,20 +1,26 @@
+import 'dart:convert';
 import 'dart:math' as math;
+import 'dart:async';
+import 'dart:io';
 
+import 'package:args/command_runner.dart';
 import 'package:built_collection/built_collection.dart';
+import 'package:built_value/serializer.dart';
 import 'package:shared_lib/src/weather_app_models.dart';
 
 DateTime _today = new DateTime.now();
 DateTime startDateTime = new DateTime(_today.year, _today.month, _today.day, 0);
 DateTime dailyDate = _today;
 var _random = new math.Random();
-List<String> cities = ["Portland", "London", "Berlin", "Chaing Mai"];
+List<String> cities = allCities;
+
+Serializers standardSerializers = serializers;
 
 int generateCloudCoverageNum(WeatherDescription description) {
   switch (description) {
     case WeatherDescription.cloudy:
       return 75;
     case WeatherDescription.rain:
-    case WeatherDescription.snow:
       return 45;
     case WeatherDescription.clear:
     case WeatherDescription.sunny:
@@ -27,7 +33,8 @@ WeatherDescription generateTimeAwareWeatherDescription(DateTime time) {
   var hour = time.hour;
 
   var descriptions = WeatherDescription.values;
-  var description = descriptions[_random.nextInt(descriptions.length - 1)];
+  var description =
+      descriptions.elementAt(_random.nextInt(descriptions.length - 1));
   if (hour < 6 || hour > 18) {
     if (description == WeatherDescription.sunny) {
       description = WeatherDescription.clear;
@@ -79,5 +86,28 @@ Forecast generateTenDayForecast(String city) {
     tenDayForecast.add(dailyForecastGenerator(city, 2, 10));
   });
 
-  return new Forecast((b) => b..days = tenDayForecast);
+  return new Forecast((b) => b
+    ..days = tenDayForecast
+    ..city = city);
+}
+
+
+/// CLI Tool to generate JSON
+class GenerateWeatherDataCommand extends Command {
+  GenerateWeatherDataCommand();
+
+  @override
+  String get description => 'Generate weather data JSON';
+
+  @override
+  String get name => 'data';
+
+  Future run() async {
+    var data = {};
+    for (var city in allCities) {
+      data[city] = standardSerializers.serialize(generateTenDayForecast(city));
+    }
+    var file = new File('lib/src/content/weather_data.json')
+        .writeAsString(json.encode(data));
+  }
 }
