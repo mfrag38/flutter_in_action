@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:shared_lib/src/weather_app_models.dart';
+import 'package:shared_lib/weather_app.dart';
 
-/// This _isn't_ in shared because these methods will be
+
+/// This _isn't_ in shared_lib because these methods will be
 /// discussed in the manuscript
+///
+/// The hourly data is based on 3 hour intervals from 0..24
 List<int> hours = [3, 6, 9, 12, 15, 18, 21, 24];
 
 Map<WeatherDescription, IconData> weatherIcons = {
