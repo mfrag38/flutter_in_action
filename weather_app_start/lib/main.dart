@@ -9,7 +9,7 @@ void main() {
   // Don't allow landscape mode
   SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
-      .then((_) => runApp(new MyApp(settings: settings)));
+      .then((_) => runApp(MyApp(settings: settings)));
 }
 
 class MyApp extends StatelessWidget {
