@@ -13,7 +13,6 @@ Map<WeatherDescription, IconData> weatherIcons = {
   WeatherDescription.cloudy: Icons.wb_cloudy,
   WeatherDescription.clear: Icons.brightness_2,
   WeatherDescription.rain: Icons.beach_access,
-  WeatherDescription.snow: Icons.ac_unit,
 };
 
 double appBarHeight(BuildContext context) {

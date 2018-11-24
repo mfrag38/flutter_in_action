@@ -1,6 +1,11 @@
+import 'dart:convert';
 import 'dart:math' as math;
+import 'dart:async';
+import 'dart:io';
 
+import 'package:args/command_runner.dart';
 import 'package:built_collection/built_collection.dart';
+import 'package:built_value/serializer.dart';
 import 'package:shared_lib/src/weather_app_models.dart';
 
 DateTime _today = new DateTime.now();
@@ -9,12 +14,13 @@ DateTime dailyDate = _today;
 var _random = new math.Random();
 List<String> cities = ["Portland", "London", "Berlin", "Chaing Mai"];
 
+Serializers standardSerializers = serializers;
+
 int generateCloudCoverageNum(WeatherDescription description) {
   switch (description) {
     case WeatherDescription.cloudy:
       return 75;
     case WeatherDescription.rain:
-    case WeatherDescription.snow:
       return 45;
     case WeatherDescription.clear:
     case WeatherDescription.sunny:
@@ -27,7 +33,8 @@ WeatherDescription generateTimeAwareWeatherDescription(DateTime time) {
   var hour = time.hour;
 
   var descriptions = WeatherDescription.values;
-  var description = descriptions[_random.nextInt(descriptions.length - 1)];
+  var description =
+      descriptions.elementAt(_random.nextInt(descriptions.length - 1));
   if (hour < 6 || hour > 18) {
     if (description == WeatherDescription.sunny) {
       description = WeatherDescription.clear;
@@ -55,7 +62,7 @@ ForecastDay dailyForecastGenerator(String city, int low, int high) {
       ..temperatureUnit = TemperatureUnit.celsius;
     forecasts.add(Weather((b) => b
       ..city = city
-      ..dateTime = startDateTime
+      ..dateTime = startDateTime.toUtc()
       ..description = randomDescription
       ..cloudCoveragePercentage = generateCloudCoverageNum(randomDescription)
       ..temperature = tempBuilder));
@@ -67,7 +74,7 @@ ForecastDay dailyForecastGenerator(String city, int low, int high) {
     ..hourlyWeather = forecasts
     ..min = runningMin
     ..max = runningMax
-    ..date = dailyDate);
+    ..date = dailyDate.toUtc());
   dailyDate.add(Duration(days: 1));
   return forecastDay;
 }
@@ -80,4 +87,20 @@ Forecast generateTenDayForecast(String city) {
   });
 
   return new Forecast((b) => b..days = tenDayForecast);
+}
+
+class GenerateWeatherDataCommand extends Command {
+  GenerateWeatherDataCommand();
+
+  @override
+  String get description => 'Generate weather data JSON';
+
+  @override
+  String get name => 'data';
+
+  Future run() async {
+    var data =
+        standardSerializers.serialize(generateTenDayForecast('Portland'));
+    var file = new File('data.json').writeAsString(json.encode(data));
+  }
 }

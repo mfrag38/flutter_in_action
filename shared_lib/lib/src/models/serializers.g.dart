@@ -25,6 +25,7 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(Temperature.serializer)
       ..add(TemperatureUnit.serializer)
       ..add(Weather.serializer)
+      ..add(WeatherDescription.serializer)
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(ForecastDay)]),
           () => new ListBuilder<ForecastDay>())

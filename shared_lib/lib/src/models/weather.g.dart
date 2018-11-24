@@ -22,7 +22,7 @@ part of 'weather.dart';
 const TemperatureUnit _$celsius = const TemperatureUnit._('celsius');
 const TemperatureUnit _$fahrenheit = const TemperatureUnit._('fahrenheit');
 
-TemperatureUnit _$valueOf(String name) {
+TemperatureUnit _$valueOfTemperatureUnit(String name) {
   switch (name) {
     case 'celsius':
       return _$celsius;
@@ -33,10 +33,38 @@ TemperatureUnit _$valueOf(String name) {
   }
 }
 
-final BuiltSet<TemperatureUnit> _$values =
+final BuiltSet<TemperatureUnit> _$tempatureUnitValues =
     new BuiltSet<TemperatureUnit>(const <TemperatureUnit>[
   _$celsius,
   _$fahrenheit,
+]);
+
+const WeatherDescription _$clear = const WeatherDescription._('clear');
+const WeatherDescription _$cloudy = const WeatherDescription._('cloudy');
+const WeatherDescription _$sunny = const WeatherDescription._('sunny');
+const WeatherDescription _$rain = const WeatherDescription._('rain');
+
+WeatherDescription _$valueOfWeatherDescription(String name) {
+  switch (name) {
+    case 'clear':
+      return _$clear;
+    case 'cloudy':
+      return _$cloudy;
+    case 'sunny':
+      return _$sunny;
+    case 'rain':
+      return _$rain;
+    default:
+      throw new ArgumentError(name);
+  }
+}
+
+final BuiltSet<WeatherDescription> _$weatherDescriptionValues =
+    new BuiltSet<WeatherDescription>(const <WeatherDescription>[
+  _$clear,
+  _$cloudy,
+  _$sunny,
+  _$rain,
 ]);
 
 Serializer<Forecast> _$forecastSerializer = new _$ForecastSerializer();
@@ -45,6 +73,8 @@ Serializer<Weather> _$weatherSerializer = new _$WeatherSerializer();
 Serializer<Temperature> _$temperatureSerializer = new _$TemperatureSerializer();
 Serializer<TemperatureUnit> _$temperatureUnitSerializer =
     new _$TemperatureUnitSerializer();
+Serializer<WeatherDescription> _$weatherDescriptionSerializer =
+    new _$WeatherDescriptionSerializer();
 
 class _$ForecastSerializer implements StructuredSerializer<Forecast> {
   @override
@@ -294,6 +324,24 @@ class _$TemperatureUnitSerializer
   TemperatureUnit deserialize(Serializers serializers, Object serialized,
           {FullType specifiedType = FullType.unspecified}) =>
       TemperatureUnit.valueOf(serialized as String);
+}
+
+class _$WeatherDescriptionSerializer
+    implements PrimitiveSerializer<WeatherDescription> {
+  @override
+  final Iterable<Type> types = const <Type>[WeatherDescription];
+  @override
+  final String wireName = 'WeatherDescription';
+
+  @override
+  Object serialize(Serializers serializers, WeatherDescription object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      object.name;
+
+  @override
+  WeatherDescription deserialize(Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      WeatherDescription.valueOf(serialized as String);
 }
 
 class _$Forecast extends Forecast {

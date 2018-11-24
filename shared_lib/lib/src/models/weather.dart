@@ -85,14 +85,22 @@ class TemperatureUnit extends EnumClass {
 
   const TemperatureUnit._(String name) : super(name);
 
-  static BuiltSet<TemperatureUnit> get values => _$values;
-  static TemperatureUnit valueOf(String name) => _$valueOf(name);
+  static BuiltSet<TemperatureUnit> get values => _$tempatureUnitValues;
+  static TemperatureUnit valueOf(String name) => _$valueOfTemperatureUnit(name);
 }
 
-enum WeatherDescription {
-  clear,
-  cloudy,
-  sunny,
-  rain,
-  snow,
+class WeatherDescription extends EnumClass {
+  static Serializer<WeatherDescription> get serializer =>
+      _$weatherDescriptionSerializer;
+
+  static const WeatherDescription clear = _$clear;
+  static const WeatherDescription cloudy = _$cloudy;
+  static const WeatherDescription sunny = _$sunny;
+  static const WeatherDescription rain = _$rain;
+
+  const WeatherDescription._(String name) : super(name);
+
+  static BuiltSet<WeatherDescription> get values => _$weatherDescriptionValues;
+  static WeatherDescription valueOf(String name) =>
+      _$valueOfWeatherDescription(name);
 }
