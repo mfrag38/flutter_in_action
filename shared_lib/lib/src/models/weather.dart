@@ -31,8 +31,9 @@ abstract class ForecastDay implements Built<ForecastDay, ForecastDayBuilder> {
   static Serializer<ForecastDay> get serializer => _$forecastDaySerializer;
 
   static Weather getHourSelection(ForecastDay self, int hour) {
+    print("ForecastDay.getHourSelection => hour = $hour");
     if (hour == 0) {
-      // The hours run 1,2,3...22,23,0
+      // DateTime hours run 1,2,3...22,23,0
       // 0 == midnight
       return self.hourlyWeather.last;
     }

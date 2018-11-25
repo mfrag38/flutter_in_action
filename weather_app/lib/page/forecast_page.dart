@@ -62,7 +62,9 @@ class _ForecastPageState extends State<ForecastPage>
   void _init() {
     _bloc = new ForecastBloc(widget.settings.selectedCity);
     var startTime = _bloc.selectedHourlyTemperature.dateTime.hour;
+    print("forecastPage._init => startTime = $startTime");
     var startTabIndex = utils.hours.indexOf(startTime);
+    print("forecastPage._init.startTabIndex = $startTabIndex");
     _tabController = TabController(
         length: utils.hours.length, vsync: this, initialIndex: startTabIndex);
     _tabController.addListener(handleTabChange);
@@ -162,8 +164,7 @@ class _ForecastPageState extends State<ForecastPage>
   String get _weatherDescription {
     var day =
         DateUtils.weekdays[_bloc.selectedHourlyTemperature.dateTime.weekday];
-    var description =
-        _bloc.selectedHourlyTemperature.description.toString();
+    var description = _bloc.selectedHourlyTemperature.description.toString();
     return "$day. ${description.replaceFirst(description[0], description[0].toUpperCase())}.";
   }
 

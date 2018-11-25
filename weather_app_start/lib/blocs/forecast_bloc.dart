@@ -8,7 +8,8 @@ class ForecastBloc {
   DateTime _today = new DateTime.now();
 
   ForecastBloc(this.city) {
-    forecast = generateTenDayForecast(city);
+    var helper = new WeatherDataHelper();
+    forecast = helper.generateTenDayForecast(city);
     selectedDay = Forecast.getSelectedDayForecast(
         forecast, DateTime(_today.year, _today.month, _today.day));
     selectedHourlyTemperature = ForecastDay.getHourSelection(
