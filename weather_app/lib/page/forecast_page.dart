@@ -5,6 +5,7 @@ import 'package:weather_app/blocs/forecast_bloc.dart';
 import 'package:weather_app/models/models.dart';
 
 import 'package:weather_app/utils/forecast_animation_utils.dart' as utils;
+import 'package:weather_app/utils/flutter_ui_utils.dart' as ui;
 import 'package:weather_app/widget/transition_appbar.dart';
 import 'package:weather_app/widget/clouds_background.dart';
 import 'package:weather_app/widget/color_transition_text.dart';
@@ -62,9 +63,7 @@ class _ForecastPageState extends State<ForecastPage>
   void _init() {
     _bloc = new ForecastBloc(widget.settings.selectedCity);
     var startTime = _bloc.selectedHourlyTemperature.dateTime.hour;
-    print("forecastPage._init => startTime = $startTime");
     var startTabIndex = utils.hours.indexOf(startTime);
-    print("forecastPage._init.startTabIndex = $startTabIndex");
     _tabController = TabController(
         length: utils.hours.length, vsync: this, initialIndex: startTabIndex);
     _tabController.addListener(handleTabChange);
@@ -215,7 +214,7 @@ class _ForecastPageState extends State<ForecastPage>
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(utils.appBarHeight(context)),
+        preferredSize: Size.fromHeight(ui.appBarHeight(context)),
         child: TransitionAppbar(
           animation: _backgroundColorTween.animate(_animationController),
           title: ColorTransitionText(

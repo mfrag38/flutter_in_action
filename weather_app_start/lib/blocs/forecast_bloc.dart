@@ -16,19 +16,7 @@ class ForecastBloc {
         selectedDay, DateTime.now().toLocal().hour);
   }
 
-//  ForecastAnimationState getDataForNextAnimationState(int index) {
-//    var hour = getSelectedHourFromTabIndex(index);
-//    var newSelection = ForecastDay.getHourSelection(selectedDay, hour);
-//    var endAnimationState = new ForecastAnimationState.stateForNextSelection(
-//        newSelection.dateTime.hour, newSelection.description);
-//
-//    // update selectedHourlyTemperature to currentChoice
-//    selectedHourlyTemperature = newSelection;
-//    return endAnimationState;
-//  }
-
   int getSelectedHourFromTabIndex(int index) {
     return selectedDay.hourlyWeather[index].dateTime.hour;
   }
 }
-

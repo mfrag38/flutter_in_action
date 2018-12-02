@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 final double kToolbarHeight = 56.0;
 double appBarHeight(BuildContext context) {
   return screenAwareSize(kToolbarHeight, context);

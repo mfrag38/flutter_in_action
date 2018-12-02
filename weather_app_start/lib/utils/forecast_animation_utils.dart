@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_lib/weather_app.dart';
 
-
 /// This _isn't_ in shared_lib because these methods will be
 /// discussed in the manuscript
 ///

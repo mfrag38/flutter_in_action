@@ -13,9 +13,6 @@ class ForecastBloc {
     forecast = helper.generateTenDayForecast(city);
     selectedDay = Forecast.getSelectedDayForecast(
         forecast, DateTime(_today.year, _today.month, _today.day));
-    print("ForecastBloc._() => selectedDay = $selectedDay");
-    print(
-        "ForecastBloc._() => DateTime.now.local.hour = ${DateTime.now().toLocal().hour}");
     selectedHourlyTemperature = ForecastDay.getHourSelection(
         selectedDay, DateTime.now().toLocal().hour);
   }
