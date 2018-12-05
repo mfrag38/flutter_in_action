@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app_start/styles.dart';
 
-// TODO: DEFER TO CHAPTER 6
+// TODO: WAIT UNTIL TO CHAPTER 6
 class Clouds extends StatelessWidget {
   final bool isRaining;
 

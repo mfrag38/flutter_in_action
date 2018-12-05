@@ -34,16 +34,16 @@ class _ForecastPageState extends State<ForecastPage>
   @override
   void initState() {
     super.initState();
-    _init();
+    _render();
   }
 
   @override
   void didUpdateWidget(ForecastPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _init();
+    _render();
   }
 
-  void _init() {
+  void _render() {
     _bloc = new ForecastBloc(widget.settings.selectedCity);
     var startTime = _bloc.selectedHourlyTemperature.dateTime.hour;
     var startTabIndex = utils.hours.indexOf(startTime);
@@ -53,25 +53,19 @@ class _ForecastPageState extends State<ForecastPage>
       initialIndex: startTabIndex,
     );
     _tabController.addListener(handleTabChange);
-    _handleStateChange();
-  }
-
-  void _handleStateChange() {
-    setState(() {
-      activeTabIndex = _tabController.index;
-    });
   }
 
   @override
   void dispose() {
     _tabController?.dispose();
-
     super.dispose();
   }
 
   void handleTabChange() {
     if (_tabController.indexIsChanging) return;
-    _handleStateChange();
+    setState(() {
+      activeTabIndex = _tabController.index;
+    });
   }
 
   List<String> get _humanReadableHours {
