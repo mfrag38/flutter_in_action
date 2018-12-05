@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class SegmentedControl extends StatefulWidget {
+  final Key key;
   final List<String> segments;
   final onSelectionChanged;
   final bool editable;
   final int initialSelectionIndex;
-  final Key key;
 
   SegmentedControl(
     this.segments, {
@@ -21,10 +21,10 @@ class SegmentedControl extends StatefulWidget {
 
 class _SegmentedControlState extends State<SegmentedControl> {
   _SegmentedControlState();
-  int selectedToggle;
+  int selectedIndex;
 
   handleSelect(int widgetNum) {
-    setState(() => selectedToggle = widgetNum);
+    setState(() => selectedIndex = widgetNum);
     widget.onSelectionChanged(widgetNum);
   }
 
@@ -44,7 +44,7 @@ class _SegmentedControlState extends State<SegmentedControl> {
     if (lastSegment == null) return [];
     List<Color> childBorders = [];
 
-    var selectedIndex = this.selectedToggle ?? widget.initialSelectionIndex;
+    var selectedIndex = this.selectedIndex ?? widget.initialSelectionIndex;
 
     List<Widget> segmentWidgets = [];
     widget.segments.forEach((segment) {
@@ -58,18 +58,18 @@ class _SegmentedControlState extends State<SegmentedControl> {
 
       segmentWidgets.add(
         new Expanded(
-          child: new InkWell(
+          child: InkWell(
             onTap: widget.editable
                 ? () => handleSelect(widget.segments.indexOf(segment))
                 : null,
-            child: new Container(
-              padding: new EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-              decoration: new BoxDecoration(
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+              decoration: BoxDecoration(
                 color: selectedIndex == widget.segments.indexOf(segment)
                     ? isEditable()
                     : Colors.white,
-                border: new Border(
-                    right: new BorderSide(
+                border: Border(
+                    right: BorderSide(
                         color: childBorders[
                             idx]) // hide right border on last child
                     ),
@@ -79,7 +79,7 @@ class _SegmentedControlState extends State<SegmentedControl> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: new TextStyle(
+                style: TextStyle(
                   color: selectedIndex == widget.segments.indexOf(segment)
                       ? Colors.white
                       : isEditable(),
@@ -96,13 +96,13 @@ class _SegmentedControlState extends State<SegmentedControl> {
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
-      margin: new EdgeInsets.symmetric(vertical: 5.0),
-      decoration: new BoxDecoration(
-        border: new Border.all(color: isEditable(), width: 1.3),
-        borderRadius: new BorderRadius.all(const Radius.circular(3.5)),
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 5.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: isEditable(), width: 1.3),
+        borderRadius: BorderRadius.all(const Radius.circular(3.5)),
       ),
-      child: new Row(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: createSegments(),
       ),

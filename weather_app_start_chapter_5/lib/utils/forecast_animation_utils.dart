@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_lib/weather_app.dart';
 
-
 /// This _isn't_ in shared_lib because these methods will be
 /// discussed in the manuscript
 ///
@@ -14,17 +13,6 @@ Map<WeatherDescription, IconData> weatherIcons = {
   WeatherDescription.clear: Icons.brightness_2,
   WeatherDescription.rain: Icons.beach_access,
 };
-
-double appBarHeight(BuildContext context) {
-  return screenAwareSize(40.0, context) + MediaQuery.of(context).padding.top;
-}
-
-const double baseHeight = 950.0;
-double screenAwareSize(double size, BuildContext context) {
-  double drawingHeight =
-      MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
-  return size * drawingHeight / baseHeight;
-}
 
 Map<TemperatureUnit, String> temperatureLabels = {
   TemperatureUnit.celsius: "°C",
