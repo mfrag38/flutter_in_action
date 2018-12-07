@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_lib/date_utils.dart';
 import 'package:shared_lib/weather_app.dart';
-import 'package:weather_app/utils/forecast_animation_utils.dart';
-import 'package:weather_app/widget/color_transition_icon.dart';
-import 'package:weather_app/widget/color_transition_text.dart';
+import 'package:weather_app_complete/utils/forecast_animation_utils.dart';
+import 'package:weather_app_complete/widget/color_transition_icon.dart';
+import 'package:weather_app_complete/widget/color_transition_text.dart';
 
 class ForecastTableView extends StatelessWidget {
   final AppSettings settings;

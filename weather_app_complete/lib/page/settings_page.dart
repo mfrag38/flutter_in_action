@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_lib/weather_app.dart';
-import 'package:weather_app/styles.dart';
-import 'package:weather_app/widget/segmented_control.dart';
+import 'package:weather_app_complete/styles.dart';
+import 'package:weather_app_complete/widget/segmented_control.dart';
 
 class SettingsPage extends StatefulWidget {
   final AppSettings settings;

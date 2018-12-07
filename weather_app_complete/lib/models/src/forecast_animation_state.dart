@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:shared_lib/weather_app.dart';
-import 'package:weather_app/styles.dart';
+import 'package:weather_app_complete/styles.dart';
 
 class ForecastAnimationState {
   final Color backgroundColor;

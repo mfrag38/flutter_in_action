@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_lib/weather_app.dart';
-import 'package:weather_app_start/styles.dart';
+import 'package:weather_app_start_chapter_5/styles.dart';
 
 class SettingsPage extends StatefulWidget {
   final AppSettings settings;
@@ -38,7 +38,6 @@ class SettingsPageState extends State<SettingsPage> {
           'Settings Page',
           style: TextStyle(color: AppColor.textColorLight),
         ),
-        // TODO: Implement leading action, close settings page
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
