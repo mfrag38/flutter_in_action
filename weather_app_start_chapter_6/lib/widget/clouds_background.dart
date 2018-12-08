@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app_start_chapter_6/styles.dart';
 
+// TODO: Make Animated
+// TODO: Draw clouds with CustomPainter
 class Clouds extends StatelessWidget {
   final bool isRaining;
 

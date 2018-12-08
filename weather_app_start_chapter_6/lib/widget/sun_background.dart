@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app_start_chapter_6/styles.dart';
 
+
+// TODO: Make Animated
 class Sun extends StatelessWidget {
   Sun({Key key}) : super(key: key);
 

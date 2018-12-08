@@ -4,6 +4,7 @@ import 'package:shared_lib/weather_app.dart';
 import 'package:weather_app_start_chapter_6/utils/forecast_animation_utils.dart'
     as utils;
 
+// TODO: Make Animated
 class ForecastTableView extends StatelessWidget {
   final AppSettings settings;
   final Forecast forecast;

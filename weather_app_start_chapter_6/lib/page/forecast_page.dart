@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_lib/weather_app.dart';
 import 'package:shared_lib/date_utils.dart';
 import 'package:weather_app_start_chapter_6/blocs/forecast_bloc.dart';
+import 'package:weather_app_start_chapter_6/models/models.dart';
 import 'package:weather_app_start_chapter_6/styles.dart';
 import 'package:weather_app_start_chapter_6/utils/flutter_ui_utils.dart';
 import 'package:weather_app_start_chapter_6/utils/forecast_animation_utils.dart'
@@ -33,7 +34,17 @@ class _ForecastPageState extends State<ForecastPage>
   int activeTabIndex;
   ForecastBloc _bloc;
 
-  _ForecastPageState();
+  // New properties for for chapter 6
+  AnimationController _animationController;
+  AnimationController _weatherConditionAnimationController;
+  ColorTween _colorTween;
+  ColorTween _backgroundColorTween;
+  ColorTween _textColorTween;
+  ColorTween _cloudColorTween;
+  Tween<Offset> _positionOffsetTween;
+  TweenSequence<Offset> _cloudPositionOffsetTween;
+  ForecastAnimationState currentAnimationState;
+  ForecastAnimationState nextAnimationState;
 
   @override
   void initState() {
@@ -41,10 +52,15 @@ class _ForecastPageState extends State<ForecastPage>
     _render();
   }
 
+  /// didUpdateWidget is fired from Flutter whenever the
+  /// widget receives a new configuration from elsewhere
+  /// in the tree.
+  ///
+  /// In this case, it'll be called whenever the app settings change
+  /// Because I've 'lifted state up' in this app.
   @override
   void didUpdateWidget(ForecastPage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _render();
+    // TODO: implement didUpdateWidget
   }
 
   void _render() {
@@ -57,11 +73,18 @@ class _ForecastPageState extends State<ForecastPage>
       initialIndex: startTabIndex,
     );
     _tabController.addListener(handleTabChange);
+
+    // TODO: handle animation updates
+//    currentAnimationState =
+//        _bloc.getDataForNextAnimationState(_tabController.index);
+//    _handleStateChange();
   }
 
   @override
   void dispose() {
     _tabController?.dispose();
+    // TODO: dispose AnimationControllers
+//    _animationController?.dispose();
     super.dispose();
   }
 
@@ -70,6 +93,44 @@ class _ForecastPageState extends State<ForecastPage>
     setState(() {
       activeTabIndex = _tabController.index;
     });
+  }
+
+  /// New methods in Chapter 6
+  ///
+  /// setState isn't enough in this app, because there's an
+  /// animation _every time_ that the state updates.
+  /// This method should build animation controllers and tweens,
+  /// and get relevant data
+  void _handleStateChange() {
+    // TODO: Implement _handleStateChange()
+  }
+
+  /// This method is called whenever the state changes
+  /// On every state change in this app, the animation needs to be kicked off again
+  void _initAnimation() {
+    // TODO: Implement _initAnimation()
+  }
+
+  /// [AnimationController]s are rebuilt often in this app,
+  /// Everytime the state changes. This method should rebuild them.
+  /// Be sure to dispose of old controllers!
+  ///
+  void _buildAnimationControllers() {
+    // TODO: Implement _buildAnimationControllers()
+  }
+
+  /// Because _each_ iteration of an animation has start
+  /// and end points that can't be predetermined, we must
+  /// build the Tweens and TweenSequence on the fly.
+  ///
+  /// i.e.:
+  /// the start color & end color of the sun could be
+  /// [AppColor.noonSun] => [AppColor.midnightSun],
+  /// if the user starts on `12:00` on the [TabBar] and then
+  /// selects `24:00`. It changes depending on what they select.
+  ///
+  void _buildTweens() {
+    // TODO: Implement _buildTweens()
   }
 
   List<String> get _humanReadableHours {
@@ -98,13 +159,16 @@ class _ForecastPageState extends State<ForecastPage>
 
   @override
   Widget build(BuildContext context) {
+    // TODO: pass animation to sun
     var background = Sun();
 
+    // TODO: pass animation to table
     var forecastContent = ForecastTableView(
       settings: widget.settings,
       forecast: _bloc.forecast,
     );
 
+    // TODO: Update to use ColorTransitionText in place of text
     var mainContent = Container(
       padding: EdgeInsets.only(bottom: 24.0),
       child: Column(
@@ -128,6 +192,9 @@ class _ForecastPageState extends State<ForecastPage>
 
     return Scaffold(
       appBar: PreferredSize(
+        preferredSize: Size.fromHeight(appBarHeight(context)),
+
+        // TODO: Replace with TransitionAppBar
         child: AppBar(
           title: Text(widget.settings.selectedCity,
               style: Theme.of(context)
@@ -139,10 +206,13 @@ class _ForecastPageState extends State<ForecastPage>
           actions: <Widget>[widget.settingsButton],
           leading: widget.citiesMenu,
         ),
-        preferredSize: Size.fromHeight(appBarHeight(context)),
       ),
+
+      // TODO: Add ColorTransitionBox for background
       body: new Stack(
         children: <Widget>[
+          // TODO: Use SlideTransitions
+          // TODO: Use proper keys
           Positioned(
             top: 100.0,
             bottom: 100.0,
@@ -157,6 +227,7 @@ class _ForecastPageState extends State<ForecastPage>
             children: <Widget>[
               forecastContent,
               mainContent,
+              // TODO: Use color transition text
               Flexible(child: timePickerRow),
             ],
           ),

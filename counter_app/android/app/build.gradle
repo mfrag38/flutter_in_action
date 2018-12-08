@@ -32,7 +32,7 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        // Todo: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.counterapp"
         minSdkVersion 16
         targetSdkVersion 27
