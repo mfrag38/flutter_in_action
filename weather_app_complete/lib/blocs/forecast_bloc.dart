@@ -1,4 +1,4 @@
-import 'package:weather_app/models/models.dart';
+import 'package:weather_app_complete/models/models.dart';
 import 'package:shared_lib/weather_app.dart';
 
 class ForecastBloc {

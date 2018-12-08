@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_lib/weather_app.dart';
-import 'package:weather_app_start/page/forecast_page.dart';
-import 'package:weather_app_start/styles.dart';
+import 'package:weather_app_start_chapter_5/page/forecast_page.dart';
+import 'package:weather_app_start_chapter_5/styles.dart';
 
 void main() {
   AppSettings settings = new AppSettings();
@@ -38,7 +38,9 @@ class MyApp extends StatelessWidget {
       title: 'Weather App',
       debugShowCheckedModeBanner: false,
       theme: theme,
-      home: ForecastPage(settings: settings,),
+      home: ForecastPage(
+        settings: settings,
+      ),
     );
   }
 }

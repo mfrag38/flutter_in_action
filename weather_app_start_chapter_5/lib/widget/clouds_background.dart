@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app_start/styles.dart';
+import 'package:weather_app_start_chapter_5/styles.dart';
 
 // TODO: WAIT UNTIL TO CHAPTER 6
 class Clouds extends StatelessWidget {

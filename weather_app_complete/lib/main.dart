@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_lib/weather_app.dart';
-import 'package:weather_app/page/page_container.dart';
-import 'package:weather_app/styles.dart';
+import 'package:weather_app_complete/page/page_container.dart';
+import 'package:weather_app_complete/styles.dart';
 
 void main() {
   AppSettings settings = new AppSettings();

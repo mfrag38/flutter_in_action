@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_lib/weather_app.dart';
 import 'package:shared_lib/date_utils.dart';
-import 'package:weather_app_start/blocs/forecast_bloc.dart';
-import 'package:weather_app_start/utils/forecast_animation_utils.dart' as utils;
-import 'package:weather_app_start/widget/forecast_table.dart';
-import 'package:weather_app_start/widget/sun_background.dart';
-import 'package:weather_app_start/widget/time_picker_row.dart';
+import 'package:weather_app_start_chapter_5/blocs/forecast_bloc.dart';
+import 'package:weather_app_start_chapter_5/utils/forecast_animation_utils.dart' as utils;
+import 'package:weather_app_start_chapter_5/widget/forecast_table.dart';
+import 'package:weather_app_start_chapter_5/widget/sun_background.dart';
+import 'package:weather_app_start_chapter_5/widget/time_picker_row.dart';
 
 class ForecastPage extends StatefulWidget {
   final PopupMenuButton menu;

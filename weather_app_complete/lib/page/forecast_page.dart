@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:shared_lib/weather_app.dart';
 import 'package:shared_lib/date_utils.dart';
-import 'package:weather_app/blocs/forecast_bloc.dart';
-import 'package:weather_app/models/models.dart';
+import 'package:weather_app_complete/blocs/forecast_bloc.dart';
+import 'package:weather_app_complete/models/models.dart';
 
-import 'package:weather_app/utils/forecast_animation_utils.dart' as utils;
-import 'package:weather_app/utils/flutter_ui_utils.dart' as ui;
-import 'package:weather_app/widget/transition_appbar.dart';
-import 'package:weather_app/widget/clouds_background.dart';
-import 'package:weather_app/widget/color_transition_text.dart';
-import 'package:weather_app/widget/color_transition_box.dart';
-import 'package:weather_app/widget/forecast_table.dart';
-import 'package:weather_app/widget/sun_background.dart';
-import 'package:weather_app/widget/time_picker_row.dart';
+import 'package:weather_app_complete/utils/forecast_animation_utils.dart'
+    as utils;
+import 'package:weather_app_complete/utils/flutter_ui_utils.dart' as ui;
+import 'package:weather_app_complete/widget/transition_appbar.dart';
+import 'package:weather_app_complete/widget/clouds_background.dart';
+import 'package:weather_app_complete/widget/color_transition_text.dart';
+import 'package:weather_app_complete/widget/color_transition_box.dart';
+import 'package:weather_app_complete/widget/forecast_table.dart';
+import 'package:weather_app_complete/widget/sun_background.dart';
+import 'package:weather_app_complete/widget/time_picker_row.dart';
 
 class ForecastPage extends StatefulWidget {
   final PopupMenuButton menu;
@@ -34,6 +35,7 @@ class _ForecastPageState extends State<ForecastPage>
     with TickerProviderStateMixin {
   TabController _tabController;
   int activeTabIndex;
+  ForecastBloc _bloc;
   AnimationController _animationController;
   AnimationController _weatherConditionAnimationController;
   ColorTween _colorTween;
@@ -42,25 +44,29 @@ class _ForecastPageState extends State<ForecastPage>
   ColorTween _cloudColorTween;
   Tween<Offset> _positionOffsetTween;
   TweenSequence<Offset> _cloudPositionOffsetTween;
-  ForecastBloc _bloc;
   ForecastAnimationState currentAnimationState;
   ForecastAnimationState nextAnimationState;
-
-  _ForecastPageState();
 
   @override
   void initState() {
     super.initState();
-    _init();
+    _render();
   }
 
   @override
   void didUpdateWidget(ForecastPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _init();
+    _render();
   }
 
-  void _init() {
+  @override
+  void dispose() {
+    _tabController?.dispose();
+    _animationController?.dispose();
+    super.dispose();
+  }
+
+  void _render() {
     _bloc = new ForecastBloc(widget.settings.selectedCity);
     var startTime = _bloc.selectedHourlyTemperature.dateTime.hour;
     var startTabIndex = utils.hours.indexOf(startTime);
@@ -79,17 +85,10 @@ class _ForecastPageState extends State<ForecastPage>
     _buildTweens();
     setState(() {
       activeTabIndex = _tabController.index;
-      _initAnimation();
     });
+    _initAnimation(); // TODO: Why was this in setState?
     // for next time the animation fires
     currentAnimationState = nextAnimationState;
-  }
-
-  @override
-  void dispose() {
-    _tabController?.dispose();
-    _animationController?.dispose();
-    super.dispose();
   }
 
   void handleTabChange() {
@@ -210,7 +209,9 @@ class _ForecastPageState extends State<ForecastPage>
     );
 
     var timePickerRow = TimePickerRow(
-        controller: _tabController, tabItems: _humanReadableHours);
+      controller: _tabController,
+      tabItems: _humanReadableHours,
+    );
 
     return Scaffold(
       appBar: PreferredSize(

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_lib/weather_app.dart';
-import 'package:weather_app/page/forecast_page.dart';
-import 'package:weather_app/page/settings_page.dart';
-import 'package:weather_app/styles.dart';
-import 'package:weather_app/utils/forecast_animation_utils.dart' as utils;
+import 'package:weather_app_complete/page/forecast_page.dart';
+import 'package:weather_app_complete/page/settings_page.dart';
+import 'package:weather_app_complete/styles.dart';
+import 'package:weather_app_complete/utils/forecast_animation_utils.dart' as utils;
 
 class PageContainer extends StatefulWidget {
   final AppSettings settings;
